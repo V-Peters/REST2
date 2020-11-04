@@ -3,11 +3,12 @@ package springrest.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import springrest.entity.MeetingUser;
 import springrest.entity.User;
-import springrest.service.MeetingService;
 import springrest.service.MeetingUserService;
 
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = {"http://localhost:4200"})
 @RestController
@@ -17,30 +18,21 @@ public class MeetingUserController {
 	@Autowired
 	private MeetingUserService meetingUserService;
 	
-	@Autowired
-	private MeetingService meetingService;
-
-	@GetMapping()
+	@GetMapping("/listParticipants")
 	@PreAuthorize("hasRole('ADMIN')")
 	public List<User> listParticipants(@RequestParam int id) {
 		return meetingUserService.getParticipants(id);
 	}
-/*
-	@GetMapping("/signUp")
-	public String signUp(@RequestParam(Constants.MEETING_ID) int meetingId, HttpServletRequest request) {
 
-		User userId = (User)request.getSession().getAttribute("user");
-
-		meetingUserService.signOut(userId, meetingId);
-		meetingUserService.signUp(userId, meetingId);
-
+	@GetMapping("/getMeetingsForUser")
+	@PreAuthorize("hasRole('USER')")
+	public List<MeetingUser> getMeetingsForUser(@RequestParam int id) {
+		return meetingUserService.getMeetingsForUser(id);
 	}
 
-	@GetMapping("/signOut")
-	public String signOut(@RequestParam(Constants.MEETING_ID) int meetingId, HttpServletRequest request) {
-
-		meetingUserService.signOut((User)request.getSession().getAttribute("user"), meetingId);
-
-	}*/
-	
+	@PostMapping("/updateSignup")
+	@PreAuthorize("hasRole('USER')")
+	public void updateSignup(@RequestBody Map<String, Boolean> signups, @RequestParam int userId) {
+		meetingUserService.updateSignup(signups, userId);
+	}
 }

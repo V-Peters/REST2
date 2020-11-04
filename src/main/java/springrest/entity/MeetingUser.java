@@ -26,9 +26,9 @@ public class MeetingUser {
 	@Column(name = "id_user")
 	private int idUser;
 	
-	public MeetingUser(int userId, int meetingId) {
-		this.idUser = userId;
+	public MeetingUser(int meetingId, int userId) {
 		this.idMeeting = meetingId;
+		this.idUser = userId;
 	}
 	
 }

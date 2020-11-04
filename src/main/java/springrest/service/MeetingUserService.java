@@ -9,6 +9,7 @@ import springrest.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class MeetingUserService {
@@ -36,12 +37,13 @@ public class MeetingUserService {
 		return meetingUserRepository.findByIdUser(id);
 	}
 
-	public void signUp(User user, int meetingId) {
-		meetingUserRepository.save(new MeetingUser(user.getId(), meetingId));
+	public void updateSignup(Map<String, Boolean> signups, int userId) {
+		for (Object meetingId : signups.keySet().toArray()) {
+			if (meetingUserRepository.findByIdUserAndIdMeeting(userId, Integer.parseInt(meetingId.toString())).isPresent() && signups.get(meetingId) == false) {
+				meetingUserRepository.deleteByIdUserAndIdMeeting(userId, Integer.parseInt(meetingId.toString()));
+			} else if (!meetingUserRepository.findByIdUserAndIdMeeting(userId, Integer.parseInt(meetingId.toString())).isPresent() && signups.get(meetingId) == true){
+				meetingUserRepository.save(new MeetingUser(Integer.parseInt(meetingId.toString()), userId));
+			}
+		}
 	}
-
-	public void signOut(User user, int meetingId) {
-		meetingUserRepository.deleteByIdUserAndIdMeeting(user.getId(), meetingId);
-	}
-
 }
