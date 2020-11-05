@@ -32,6 +32,11 @@ public class UserController {
 	@Autowired
 	JwtUtils jwtUtils;
 
+	@PostMapping("/checkIfUsernameExists")
+	public ResponseEntity<?> checkIfUsernameExists(@RequestBody String username) {
+		return ResponseEntity.ok(new MessageResponse((Boolean.toString(userService.doesUsernameExist(username)))));
+	}
+
 	@PostMapping("/login")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
