@@ -34,7 +34,12 @@ public class UserController {
 
 	@PostMapping("/checkIfUsernameExists")
 	public ResponseEntity<?> checkIfUsernameExists(@RequestBody String username) {
-		return ResponseEntity.ok(new MessageResponse((Boolean.toString(userService.doesUsernameExist(username)))));
+		return ResponseEntity.ok(new MessageResponse((Boolean.toString(userService.existsByUsername(username)))));
+	}
+
+	@PostMapping("/checkIfEmailExists")
+	public ResponseEntity<?> checkIfEmailExists(@RequestBody String email) {
+		return ResponseEntity.ok(new MessageResponse((Boolean.toString(userService.existsByEmail(email)))));
 	}
 
 	@PostMapping("/login")

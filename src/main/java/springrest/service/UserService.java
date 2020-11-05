@@ -45,8 +45,4 @@ public class UserService {
     user.setRoles(roles);
     userRepository.save(user);
   }
-
-  public boolean doesUsernameExist(String username) {
-    return userRepository.findByUsername(username).isPresent();
-  }
 }
