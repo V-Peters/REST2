@@ -28,11 +28,11 @@ public class User {
 	private int id;
 
 	@NotBlank
-	@Size(max = 20)
+	@Size(min = 4, max = 20)
 	private String username;
 
 	@NotBlank
-	@Size(max = 120)
+	@Size(min = 5, max = 50)
 	private String password;
 
 	@NotBlank
