@@ -15,20 +15,20 @@ import javax.persistence.*;
 @ToString
 public class MeetingUser {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private int id;
-	
-	@Column(name = "id_meeting")
-	private int idMeeting;
-	
-	@Column(name = "id_user")
-	private int idUser;
-	
-	public MeetingUser(int meetingId, int userId) {
-		this.idMeeting = meetingId;
-		this.idUser = userId;
-	}
-	
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id")
+  private int id;
+
+  @Column(name = "id_meeting")
+  private int idMeeting;
+
+  @Column(name = "id_user")
+  private int idUser;
+
+  public MeetingUser(int meetingId, int userId) {
+    this.idMeeting = meetingId;
+    this.idUser = userId;
+  }
+
 }

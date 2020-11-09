@@ -7,50 +7,37 @@ import springrest.repository.MeetingRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class MeetingService {
-	
-	@Autowired
-	private MeetingRepository meetingRepository;
 
-	
-	public List<Meeting> getMeetingsAdmin() {
-		return meetingRepository.findAll();
-	}
+  @Autowired
+  private MeetingRepository meetingRepository;
 
-	public List<Meeting> getMeetingsUser() {
-		return meetingRepository.findByDisplayTrue();
-	}
+  public List<Meeting> getMeetingsAdmin() {
+    return meetingRepository.findAll();
+  }
 
-	public Meeting getMeeting(int id) {
-		
-		Optional<Meeting> tempMeeting = meetingRepository.findById(id);
-		
-		Meeting meeting = null;
-		
-		if (tempMeeting.isPresent()) {
-			meeting = tempMeeting.get();
-		}
-		
-		return meeting;
-	}
+  public List<Meeting> getMeetingsUser() {
+    return meetingRepository.findByDisplayTrue();
+  }
 
-	public void saveMeeting(Meeting meeting) {
-		meeting.setLastUpdated(LocalDateTime.now());
-		meetingRepository.save(meeting);
-	}
+  public Meeting getMeeting(int id) {
+    return meetingRepository.findById(id).orElse(null);
+  }
 
-	public void deleteMeeting(int meetingId) {
-		System.out.println("delete in service");
-		this.meetingRepository.deleteById(meetingId);
-	}
-	
-	public void changeDisplay(int id, boolean display) {
-		System.out.println("id: " + id + ", display: " + display);
-		Meeting meeting = this.getMeeting(id);
-		meeting.setDisplay(display);
-		this.saveMeeting(meeting);
-	}
+  public void saveMeeting(Meeting meeting) {
+    meeting.setLastUpdated(LocalDateTime.now());
+    meetingRepository.save(meeting);
+  }
+
+  public void deleteMeeting(int meetingId) {
+    this.meetingRepository.deleteById(meetingId);
+  }
+
+  public void changeDisplay(int id, boolean display) {
+    Meeting meeting = this.getMeeting(id);
+    meeting.setDisplay(display);
+    this.saveMeeting(meeting);
+  }
 }

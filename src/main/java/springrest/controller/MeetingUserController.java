@@ -14,25 +14,25 @@ import java.util.Map;
 @RestController
 @RequestMapping("/meetingUser")
 public class MeetingUserController {
-	
-	@Autowired
-	private MeetingUserService meetingUserService;
-	
-	@GetMapping("/listParticipants")
-	@PreAuthorize("hasRole('ADMIN')")
-	public List<User> listParticipants(@RequestParam int id) {
-		return meetingUserService.getParticipants(id);
-	}
 
-	@GetMapping("/getMeetingsForUser")
-	@PreAuthorize("hasRole('USER')")
-	public List<MeetingUser> getMeetingsForUser(@RequestParam int id) {
-		return meetingUserService.getMeetingsForUser(id);
-	}
+  @Autowired
+  private MeetingUserService meetingUserService;
 
-	@PostMapping("/updateSignup")
-	@PreAuthorize("hasRole('USER')")
-	public void updateSignup(@RequestBody Map<String, Boolean> signups, @RequestParam int userId) {
-		meetingUserService.updateSignup(signups, userId);
-	}
+  @GetMapping("/listParticipants")
+  @PreAuthorize("hasRole('ADMIN')")
+  public List<User> listParticipants(@RequestParam int id) {
+    return meetingUserService.getParticipants(id);
+  }
+
+  @GetMapping("/getMeetingsForUser")
+  @PreAuthorize("hasRole('USER')")
+  public List<MeetingUser> getMeetingsForUser(@RequestParam int id) {
+    return meetingUserService.getMeetingsForUser(id);
+  }
+
+  @PostMapping("/updateSignup")
+  @PreAuthorize("hasRole('USER')")
+  public void updateSignup(@RequestBody Map<String, Boolean> signups, @RequestParam int userId) {
+    meetingUserService.updateSignup(signups, userId);
+  }
 }

@@ -34,15 +34,22 @@ public class UserService {
   }
 
   public void save(SignupRequest registerUser) {
-    User user = new User(0, registerUser.getUsername(), encoder.encode(registerUser.getPassword()), registerUser.getFirstname(), registerUser.getLastname(), registerUser.getEmail(), registerUser.getCompany(), null);
+    User user = new User(
+            0,
+            registerUser.getUsername(),
+            encoder.encode(registerUser.getPassword()),
+            registerUser.getFirstname(),
+            registerUser.getLastname(),
+            registerUser.getEmail(),
+            registerUser.getCompany(),
+            null);
 
-    Set<String> strRoles = registerUser.getRole();
     Set<Role> roles = new HashSet<>();
-
     Role userRole = roleRepository.findByName(ERole.ROLE_USER).orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-    roles.add(userRole);
 
+    roles.add(userRole);
     user.setRoles(roles);
+
     userRepository.save(user);
   }
 }
