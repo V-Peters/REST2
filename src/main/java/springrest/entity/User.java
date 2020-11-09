@@ -32,7 +32,7 @@ public class User {
   private String username;
 
   @NotBlank
-  @Size(min = 5, max = 50)
+  @Size(min = 5, max = 60)
   private String password;
 
   @NotBlank
@@ -44,7 +44,7 @@ public class User {
   private String lastname;
 
   @NotBlank
-  @Size(max = 50)
+  @Size(max = 100)
   @Email
   private String email;
 
