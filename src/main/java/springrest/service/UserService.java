@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import springrest.entity.ERole;
 import springrest.entity.Role;
 import springrest.entity.User;
-import springrest.payload.request.SignupRequest;
 import springrest.repository.RoleRepository;
 import springrest.repository.UserRepository;
 
@@ -33,23 +32,15 @@ public class UserService {
     return userRepository.existsByEmail(email);
   }
 
-  public void save(SignupRequest registerUser) {
-    User user = new User(
-            0,
-            registerUser.getUsername(),
-            encoder.encode(registerUser.getPassword()),
-            registerUser.getFirstname(),
-            registerUser.getLastname(),
-            registerUser.getEmail(),
-            registerUser.getCompany(),
-            null);
+  public void save(User registerUser) {
+    registerUser.setPassword(encoder.encode(registerUser.getPassword()));
 
     Set<Role> roles = new HashSet<>();
     Role userRole = roleRepository.findByName(ERole.ROLE_USER).orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 
     roles.add(userRole);
-    user.setRoles(roles);
+    registerUser.setRoles(roles);
 
-    userRepository.save(user);
+    userRepository.save(registerUser);
   }
 }

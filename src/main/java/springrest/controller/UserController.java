@@ -7,8 +7,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import springrest.payload.request.LoginRequest;
-import springrest.payload.request.SignupRequest;
+import springrest.entity.User;
 import springrest.payload.response.JwtResponse;
 import springrest.payload.response.MessageResponse;
 import springrest.security.jwt.JwtUtils;
@@ -43,9 +42,9 @@ public class UserController {
   }
 
   @PostMapping("/login")
-  public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+  public ResponseEntity<?> authenticateUser(@Valid @RequestBody User loginUser) {
 
-    Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+    Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginUser.getUsername(), loginUser.getPassword()));
 
     SecurityContextHolder.getContext().setAuthentication(authentication);
     String jwt = jwtUtils.generateJwtToken(authentication);
@@ -57,15 +56,15 @@ public class UserController {
   }
 
   @PostMapping("/register")
-  public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-    if (userService.existsByUsername(signUpRequest.getUsername())) {
+  public ResponseEntity<?> registerUser(@Valid @RequestBody User registerUser) {
+    if (userService.existsByUsername(registerUser.getUsername())) {
       return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
     }
 
-    if (userService.existsByEmail(signUpRequest.getEmail())) {
+    if (userService.existsByEmail(registerUser.getEmail())) {
       return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
     }
-    userService.save(signUpRequest);
+    userService.save(registerUser);
 
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
   }
