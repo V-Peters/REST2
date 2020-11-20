@@ -2,14 +2,10 @@ package springrest.payload.response;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
-
-import java.util.List;
 
 @Getter
 @Setter
-@ToString
-public class JwtResponse {
+public class UserResponse {
   private String accessToken;
   private String type = "Bearer";
   private int id;
@@ -18,9 +14,9 @@ public class JwtResponse {
   private String lastname;
   private String email;
   private String company;
-  private List<String> roles;
+  private String role;
 
-  public JwtResponse(String accessToken, int id, String username, String firstname, String lastname, String email, String company, List<String> roles) {
+  public UserResponse(String accessToken, int id, String username, String firstname, String lastname, String email, String company, String role) {
     this.accessToken = accessToken;
     this.id = id;
     this.username = username;
@@ -28,7 +24,6 @@ public class JwtResponse {
     this.lastname = lastname;
     this.email = email;
     this.company = company;
-    this.roles = roles;
-
+    this.role = role;
   }
 }
