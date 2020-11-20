@@ -1,5 +1,7 @@
 package springrest.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,6 +11,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "meeting")
@@ -34,6 +38,14 @@ public class Meeting {
   @Column(name = "display")
   private boolean display;
 
+  @JsonIgnore
   private LocalDateTime lastUpdated;
+
+  @JsonIgnoreProperties(value = {"username", "password", "meetings"})
+  @ManyToMany
+  @JoinTable(name = "meeting_user",
+          joinColumns = @JoinColumn(name = "id_meeting"),
+          inverseJoinColumns = @JoinColumn(name = "id_user"))
+  private Set<User> users = new HashSet<>();
 
 }

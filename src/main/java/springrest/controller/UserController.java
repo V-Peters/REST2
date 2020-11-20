@@ -8,14 +8,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import springrest.entity.User;
-import springrest.payload.response.JwtResponse;
 import springrest.payload.response.MessageResponse;
+import springrest.payload.response.UserResponse;
 import springrest.security.jwt.JwtUtils;
 import springrest.security.services.UserDetailsImpl;
 import springrest.service.UserService;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = {"http://localhost:4200"})
@@ -32,13 +31,13 @@ public class UserController {
   JwtUtils jwtUtils;
 
   @PostMapping("/checkIfUsernameExists")
-  public ResponseEntity<?> checkIfUsernameExists(@RequestBody String username) {
-    return ResponseEntity.ok(new MessageResponse((Boolean.toString(userService.existsByUsername(username)))));
+  public boolean checkIfUsernameExists(@RequestBody String username) {
+    return userService.existsByUsername(username);
   }
 
   @PostMapping("/checkIfEmailExists")
-  public ResponseEntity<?> checkIfEmailExists(@RequestBody String email) {
-    return ResponseEntity.ok(new MessageResponse((Boolean.toString(userService.existsByEmail(email)))));
+  public boolean checkIfEmailExists(@RequestBody String email) {
+    return userService.existsByEmail(email);
   }
 
   @PostMapping("/login")
@@ -50,9 +49,9 @@ public class UserController {
     String jwt = jwtUtils.generateJwtToken(authentication);
 
     UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-    List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.toList());
+    String role = userDetails.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.joining());
 
-    return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), userDetails.getFirstname(), userDetails.getLastname(), userDetails.getEmail(), userDetails.getCompany(), roles));
+    return ResponseEntity.ok(new UserResponse(jwt, userDetails.getId(), userDetails.getUsername(), userDetails.getFirstname(), userDetails.getLastname(), userDetails.getEmail(), userDetails.getCompany(), role));
   }
 
   @PostMapping("/register")

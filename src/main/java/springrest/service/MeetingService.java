@@ -11,9 +11,7 @@ import springrest.repository.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class MeetingService {
@@ -28,15 +26,26 @@ public class MeetingService {
   private MeetingUserRepository meetingUserRepository;
 
   public List<Meeting> getMeetings(HttpServletRequest request) {
+    List<Meeting> meetings;
     if (request.isUserInRole("ADMIN")) {
-      return meetingRepository.findAll();
+      meetings = meetingRepository.findAll();
     } else {
-      return meetingRepository.findByDisplayTrue();
+      meetings = meetingRepository.findByDisplayTrue();
+      for (Meeting meeting: meetings) {
+        meeting.setUsers(new HashSet<>());
+      }
     }
+      return meetings;
   }
 
   public Meeting getMeeting(int id) {
-    return meetingRepository.findById(id).orElse(null);
+    Meeting meeting = meetingRepository.findById(id).orElse(null);
+    if (meeting != null) {
+      for (User user: meeting.getUsers()){
+        user.setPassword(null);
+      }
+    }
+    return meeting;
   }
 
   public Meeting saveMeeting(Meeting meeting) {
@@ -49,10 +58,13 @@ public class MeetingService {
     return this.getMeeting(meetingId);
   }
 
-  public void changeDisplay(int id, boolean display) {
-    Meeting meeting = this.getMeeting(id);
-    meeting.setDisplay(display);
-    this.saveMeeting(meeting);
+  public boolean updateDisplay(Map<String, Boolean> displays) {
+    for (Object display : displays.keySet().toArray()) {
+      Meeting meeting = this.getMeeting(Integer.parseInt(display.toString()));
+      meeting.setDisplay(displays.get(display));
+      this.saveMeeting(meeting);
+    }
+    return true;
   }
 
   public List<User> getParticipants(int id) {
@@ -65,8 +77,10 @@ public class MeetingService {
     return users;
   }
 
-  public List<MeetingUser> getMeetingsSignedUpToForUser(int id) {
-    return meetingUserRepository.findByIdUser(id);
+  public User getUser(int id) {
+    User tempUser = userRepository.findById(id);
+    tempUser.setPassword(null);
+    return tempUser;
   }
 
   public void updateSignup(Map<String, Boolean> signUps, int userId) {

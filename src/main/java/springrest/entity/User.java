@@ -1,5 +1,7 @@
 package springrest.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
@@ -21,8 +23,10 @@ import java.util.Set;
 @AllArgsConstructor
 @ToString
 public class User {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @JsonIgnore
   private int id;
 
   @NotBlank
@@ -50,9 +54,15 @@ public class User {
   @Size(max = 100)
   private String company;
 
+  @JsonIgnore
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(name = "user_role",
           joinColumns = @JoinColumn(name = "id_user"),
           inverseJoinColumns = @JoinColumn(name = "id_role"))
   private Set<Role> roles = new HashSet<>();
+
+  @JsonIgnoreProperties(value = {"name", "datetime", "display", "users"})
+  @ManyToMany(mappedBy = "users")
+  private Set<Meeting> meetings = new HashSet<>();
+
 }

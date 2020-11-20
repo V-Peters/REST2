@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import springrest.entity.Meeting;
-import springrest.entity.MeetingUser;
 import springrest.entity.User;
 import springrest.service.MeetingService;
 
@@ -47,10 +46,7 @@ public class MeetingController {
   @PostMapping("/updateDisplay")
   @PreAuthorize("hasRole('ADMIN')")
   public boolean updateDisplay(@RequestBody Map<String, Boolean> displays) {
-    for (Object display : displays.keySet().toArray()) {
-      meetingService.changeDisplay(Integer.parseInt(display.toString()), displays.get(display));
-    }
-    return true;
+    return meetingService.updateDisplay(displays);
   }
 
   @GetMapping("/listParticipants/{id}")
@@ -59,10 +55,10 @@ public class MeetingController {
     return meetingService.getParticipants(id);
   }
 
-  @GetMapping("/getMeetingsSignedUpToForUser/{id}")
+  @GetMapping("/getUser/{id}")
   @PreAuthorize("hasRole('USER')")
-  public List<MeetingUser> getMeetingsSignedUpToForUser(@PathVariable int id) {
-    return meetingService.getMeetingsSignedUpToForUser(id);
+  public User getUser(@PathVariable int id) {
+    return meetingService.getUser(id);
   }
 
   @PostMapping("/updateSignup/{userId}")
