@@ -60,30 +60,17 @@ public class MeetingService {
 
   public boolean updateDisplay(Map<String, Boolean> displays) {
     for (Object display : displays.keySet().toArray()) {
-      Meeting meeting = this.getMeeting(Integer.parseInt(display.toString()));
+      Meeting meeting = meetingRepository.findById(Integer.parseInt(display.toString())).orElse(null);
+      if (meeting == null) {
+        return false;
+      }
       meeting.setDisplay(displays.get(display));
       this.saveMeeting(meeting);
     }
     return true;
   }
 
-  public List<User> getParticipants(int id) {
-    List<MeetingUser> meetingUserList = meetingUserRepository.findByIdMeeting(id);
-    List<User> users = new ArrayList<>();
-
-    for (MeetingUser tempMeetingUser : meetingUserList) {
-      users.add(userRepository.findById((tempMeetingUser.getIdUser())));
-    }
-    return users;
-  }
-
-  public User getUser(int id) {
-    User tempUser = userRepository.findById(id);
-    tempUser.setPassword(null);
-    return tempUser;
-  }
-
-  public void updateSignup(Map<String, Boolean> signUps, int userId) {
+  public boolean updateSignup(Map<String, Boolean> signUps, int userId) {
     for (Object meetingId : signUps.keySet().toArray()) {
       if (meetingUserRepository.findByIdUserAndIdMeeting(userId, Integer.parseInt(meetingId.toString())).isPresent() && !signUps.get(meetingId)) {
         meetingUserRepository.deleteByIdUserAndIdMeeting(userId, Integer.parseInt(meetingId.toString()));
@@ -91,5 +78,14 @@ public class MeetingService {
         meetingUserRepository.save(new MeetingUser(Integer.parseInt(meetingId.toString()), userId));
       }
     }
+    return true;
+  }
+
+  public User getUser(int id) {
+    User tempUser = userRepository.findById(id).orElse(null);
+    if (tempUser != null) {
+      tempUser.setPassword(null);
+    }
+    return tempUser;
   }
 }

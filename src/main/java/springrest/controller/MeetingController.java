@@ -49,10 +49,10 @@ public class MeetingController {
     return meetingService.updateDisplay(displays);
   }
 
-  @GetMapping("/listParticipants/{id}")
-  @PreAuthorize("hasRole('ADMIN')")
-  public List<User> listParticipants(@PathVariable int id) {
-    return meetingService.getParticipants(id);
+  @PostMapping("/updateSignup/{userId}")
+  @PreAuthorize("hasRole('USER')")
+  public boolean updateSignup(@RequestBody Map<String, Boolean> signUps, @PathVariable int userId) {
+    return meetingService.updateSignup(signUps, userId);
   }
 
   @GetMapping("/getUser/{id}")
@@ -60,12 +60,4 @@ public class MeetingController {
   public User getUser(@PathVariable int id) {
     return meetingService.getUser(id);
   }
-
-  @PostMapping("/updateSignup/{userId}")
-  @PreAuthorize("hasRole('USER')")
-  public boolean updateSignup(@RequestBody Map<String, Boolean> signUps, @PathVariable int userId) {
-    meetingService.updateSignup(signUps, userId);
-    return true;
-  }
-
 }
