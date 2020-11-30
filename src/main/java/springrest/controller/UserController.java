@@ -17,7 +17,7 @@ import springrest.service.UserService;
 import javax.validation.Valid;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = {"http://localhost:4200"})
+@CrossOrigin(origins = {"https://meeting-user-app.herokuapp.com/"})
 @RestController
 @RequestMapping("/user")
 public class UserController {

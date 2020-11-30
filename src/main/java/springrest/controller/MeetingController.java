@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = {"http://localhost:4200"})
+@CrossOrigin(origins = {"https://meeting-user-app.herokuapp.com/"})
 @RestController
 @RequestMapping("/meetings")
 public class MeetingController {
