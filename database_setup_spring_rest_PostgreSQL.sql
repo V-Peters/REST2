@@ -2,16 +2,16 @@
 -- setting up a new schema:
 -----------------------------------------------------------------------------------------------------------------------------------------
 
-DROP SCHEMA IF EXISTS "meeting-user-data" CASCADE;
-CREATE SCHEMA "meeting-user-data" AUTHORIZATION sixkrtwdufpudp;
+DROP SCHEMA IF EXISTS "meeting_user_data" CASCADE;
+CREATE SCHEMA "meeting_user_data" AUTHORIZATION sixkrtwdufpudp;
 
 
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- creating new tables for the schema:
 -----------------------------------------------------------------------------------------------------------------------------------------
 
-DROP TABLE IF EXISTS "meeting-user-data"."meeting";
-CREATE TABLE "meeting-user-data"."meeting" (
+DROP TABLE IF EXISTS "meeting_user_data"."meeting";
+CREATE TABLE "meeting_user_data"."meeting" (
   "id" serial,
   "name" character varying(100) NOT NULL UNIQUE,
   "date_time" timestamp without time zone NOT NULL,
@@ -23,8 +23,8 @@ CREATE TABLE "meeting-user-data"."meeting" (
 
 -----------------------------------------------------------------------------------------------------------------------------------------
 
-DROP TABLE IF EXISTS "meeting-user-data"."user";
-CREATE TABLE "meeting-user-data"."user" (
+DROP TABLE IF EXISTS "meeting_user_data"."user";
+CREATE TABLE "meeting_user_data"."user" (
   "id" serial,
   "username" character varying(20) NOT NULL UNIQUE,
   "password" character(60) NOT NULL,
@@ -39,8 +39,8 @@ CREATE TABLE "meeting-user-data"."user" (
 
 -----------------------------------------------------------------------------------------------------------------------------------------
 
-DROP TABLE IF EXISTS "meeting-user-data"."role";
-CREATE TABLE "meeting-user-data"."role" (
+DROP TABLE IF EXISTS "meeting_user_data"."role";
+CREATE TABLE "meeting_user_data"."role" (
   "id" serial,
   "name" character varying(20) NOT NULL UNIQUE,
   PRIMARY KEY (id)
@@ -48,28 +48,28 @@ CREATE TABLE "meeting-user-data"."role" (
 
 -----------------------------------------------------------------------------------------------------------------------------------------
 
-DROP TABLE IF EXISTS "meeting-user-data"."user_role";
-CREATE TABLE "meeting-user-data"."user_role" (
+DROP TABLE IF EXISTS "meeting_user_data"."user_role";
+CREATE TABLE "meeting_user_data"."user_role" (
   "id" serial,
   "id_user" integer NOT NULL UNIQUE,
   "id_role" integer NOT NULL,
   PRIMARY KEY (id),
-  FOREIGN KEY (id_user) REFERENCES "meeting-user-data"."user"(id) ON DELETE CASCADE,
-  FOREIGN KEY (id_role) REFERENCES "meeting-user-data"."role"(id) ON DELETE CASCADE
+  FOREIGN KEY (id_user) REFERENCES "meeting_user_data"."user"(id) ON DELETE CASCADE,
+  FOREIGN KEY (id_role) REFERENCES "meeting_user_data"."role"(id) ON DELETE CASCADE
 );
 
 -----------------------------------------------------------------------------------------------------------------------------------------
 
-DROP TABLE IF EXISTS "meeting-user-data"."meeting_user";
-CREATE TABLE "meeting-user-data"."meeting_user" (
+DROP TABLE IF EXISTS "meeting_user_data"."meeting_user";
+CREATE TABLE "meeting_user_data"."meeting_user" (
   "id" serial,
   "id_meeting" integer NOT NULL,
   "id_user" integer NOT NULL,
   "created" timestamp without time zone DEFAULT now(),
   "last_updated" timestamp without time zone DEFAULT now(),
   PRIMARY KEY (id),
-  FOREIGN KEY (id_meeting) REFERENCES "meeting-user-data"."meeting"(id) ON DELETE CASCADE,
-  FOREIGN KEY (id_user) REFERENCES "meeting-user-data"."user"(id) ON DELETE CASCADE
+  FOREIGN KEY (id_meeting) REFERENCES "meeting_user_data"."meeting"(id) ON DELETE CASCADE,
+  FOREIGN KEY (id_user) REFERENCES "meeting_user_data"."user"(id) ON DELETE CASCADE
 );
 
 
@@ -77,7 +77,7 @@ CREATE TABLE "meeting-user-data"."meeting_user" (
 -- filling up the new tables with sample data:
 -----------------------------------------------------------------------------------------------------------------------------------------
 
-INSERT INTO "meeting-user-data"."meeting" (
+INSERT INTO "meeting_user_data"."meeting" (
   "name",
   "date_time") 
 VALUES
@@ -91,7 +91,7 @@ VALUES
 
 -----------------------------------------------------------------------------------------------------------------------------------------
 
-INSERT INTO "meeting-user-data"."user" (
+INSERT INTO "meeting_user_data"."user" (
   "username",
   "password",
   "firstname",
@@ -108,7 +108,7 @@ VALUES
     
 -----------------------------------------------------------------------------------------------------------------------------------------
 
-INSERT INTO "meeting-user-data"."role" (
+INSERT INTO "meeting_user_data"."role" (
   "id",
   "name")
 VALUES
@@ -117,7 +117,7 @@ VALUES
     
 -----------------------------------------------------------------------------------------------------------------------------------------
 
-INSERT INTO "meeting-user-data"."user_role" (
+INSERT INTO "meeting_user_data"."user_role" (
   "id_user",
   "id_role")
 VALUES
@@ -130,7 +130,7 @@ VALUES
     
 -----------------------------------------------------------------------------------------------------------------------------------------
 
-INSERT INTO "meeting-user-data"."meeting_user" (
+INSERT INTO "meeting_user_data"."meeting_user" (
   "id_meeting",
   "id_user") 
 VALUES
