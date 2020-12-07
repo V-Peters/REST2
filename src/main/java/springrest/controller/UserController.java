@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import springrest.entity.User;
+import springrest.payload.request.EditUser;
 import springrest.payload.response.MessageResponse;
 import springrest.payload.response.UserResponse;
 import springrest.security.jwt.JwtUtils;
@@ -66,5 +67,15 @@ public class UserController {
     userService.save(registerUser);
 
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+  }
+
+  @PostMapping("/checkPassword/{id}")
+  public boolean checkPassword(@PathVariable int id, @RequestBody String password) {
+    return userService.checkPassword(id, password);
+  }
+
+  @PostMapping("/changeUser")
+  public boolean changeUser(@Valid @RequestBody EditUser editUser) {
+    return userService.changeUser(editUser);
   }
 }

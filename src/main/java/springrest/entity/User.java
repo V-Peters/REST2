@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -64,5 +65,7 @@ public class User {
   @JsonIgnoreProperties(value = {"name", "datetime", "display", "users"})
   @ManyToMany(mappedBy = "users")
   private Set<Meeting> meetings = new HashSet<>();
+
+  private LocalDateTime lastUpdated;
 
 }

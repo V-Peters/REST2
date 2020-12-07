@@ -1,20 +1,25 @@
 package springrest.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import springrest.entity.ERole;
 import springrest.entity.Role;
 import springrest.entity.User;
+import springrest.payload.request.EditUser;
 import springrest.repository.RoleRepository;
 import springrest.repository.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 @Service
 public class UserService {
 
+  @Autowired
+  AuthenticationManager authenticationManager;
   @Autowired
   UserRepository userRepository;
 
@@ -42,5 +47,32 @@ public class UserService {
     registerUser.setRoles(roles);
 
     userRepository.save(registerUser);
+  }
+
+  public boolean checkPassword(int id, String password) {
+    User user = userRepository.findById(id).orElse(null);
+    if (user != null) {
+      return encoder.matches(password, user.getPassword());
+    }
+    return false;
+  }
+
+  public boolean changeUser(EditUser editUser) {
+    User user = userRepository.findById(editUser.getId()).orElse(null);
+    user = mapUser(user, editUser);
+    userRepository.save(user);
+    return true;
+  }
+
+  public User mapUser(User currentUser, EditUser newUser) {
+    if (newUser.getNewPassword() != null) {
+      currentUser.setPassword(encoder.encode(newUser.getNewPassword()));
+    }
+    currentUser.setFirstname(newUser.getFirstname());
+    currentUser.setLastname(newUser.getLastname());
+    currentUser.setEmail(newUser.getEmail());
+    currentUser.setCompany(newUser.getCompany());
+    currentUser.setLastUpdated(LocalDateTime.now());
+    return currentUser;
   }
 }
