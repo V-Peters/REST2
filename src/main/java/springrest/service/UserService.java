@@ -49,19 +49,23 @@ public class UserService {
     userRepository.save(registerUser);
   }
 
+  public boolean changeUser(EditUser editUser) {
+    System.out.println(editUser);
+    if ((editUser.getCurrentPassword() == null && editUser.getNewPassword() == null) || checkPassword(editUser.getId(), editUser.getCurrentPassword())) {
+      User user = userRepository.findById(editUser.getId()).orElse(null);
+      user = mapUser(user, editUser);
+      userRepository.save(user);
+      return true;
+    }
+    return false;
+  }
+
   public boolean checkPassword(int id, String password) {
     User user = userRepository.findById(id).orElse(null);
     if (user != null) {
       return encoder.matches(password, user.getPassword());
     }
     return false;
-  }
-
-  public boolean changeUser(EditUser editUser) {
-    User user = userRepository.findById(editUser.getId()).orElse(null);
-    user = mapUser(user, editUser);
-    userRepository.save(user);
-    return true;
   }
 
   public User mapUser(User currentUser, EditUser newUser) {

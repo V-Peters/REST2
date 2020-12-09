@@ -69,11 +69,6 @@ public class UserController {
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
   }
 
-  @PostMapping("/checkPassword/{id}")
-  public boolean checkPassword(@PathVariable int id, @RequestBody String password) {
-    return userService.checkPassword(id, password);
-  }
-
   @PostMapping("/changeUser")
   public boolean changeUser(@Valid @RequestBody EditUser editUser) {
     return userService.changeUser(editUser);

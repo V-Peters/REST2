@@ -16,6 +16,9 @@ public class EditUser {
   private int id;
 
   @Size(min = 5, max = 60)
+  private String currentPassword;
+
+  @Size(min = 5, max = 60)
   private String newPassword;
 
   @NotBlank
