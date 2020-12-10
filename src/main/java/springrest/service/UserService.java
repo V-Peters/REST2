@@ -11,6 +11,7 @@ import springrest.payload.request.EditUser;
 import springrest.repository.RoleRepository;
 import springrest.repository.UserRepository;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -49,10 +50,10 @@ public class UserService {
     userRepository.save(registerUser);
   }
 
-  public boolean changeUser(EditUser editUser) {
+  public boolean changeUser(HttpServletRequest request, EditUser editUser) {
     System.out.println(editUser);
-    if ((editUser.getCurrentPassword() == null && editUser.getNewPassword() == null) || checkPassword(editUser.getId(), editUser.getCurrentPassword())) {
-      User user = userRepository.findById(editUser.getId()).orElse(null);
+    if ((editUser.getCurrentPassword() == null && editUser.getNewPassword() == null) || checkPassword(request)) {
+      User user = userRepository.findByUsername(request.getRemoteUser()).orElse(null);
       user = mapUser(user, editUser);
       userRepository.save(user);
       return true;
@@ -60,10 +61,13 @@ public class UserService {
     return false;
   }
 
-  public boolean checkPassword(int id, String password) {
-    User user = userRepository.findById(id).orElse(null);
+  public boolean checkPassword(HttpServletRequest request) {
+    User user = userRepository.findByUsername(request.getRemoteUser()).orElse(null);
     if (user != null) {
-      return encoder.matches(password, user.getPassword());
+      System.out.println(request.getHeader("password"));
+      System.out.println(user.getPassword());
+      System.out.println(encoder.matches(request.getHeader("password"), user.getPassword()));
+      return encoder.matches(request.getHeader("password"), user.getPassword());
     }
     return false;
   }
@@ -78,5 +82,17 @@ public class UserService {
     currentUser.setCompany(newUser.getCompany());
     currentUser.setLastUpdated(LocalDateTime.now());
     return currentUser;
+  }
+
+  public boolean deleteUser(HttpServletRequest request) {
+    if (checkPassword(request)) {
+      userRepository.deleteById(userRepository.findByUsername(request.getRemoteUser()).orElse(null).getId());
+      return checkIfDeleted(request.getRemoteUser());
+    }
+    return false;
+  }
+
+  private boolean checkIfDeleted(String username) {
+    return userRepository.findByUsername(username).orElse(null) == null;
   }
 }

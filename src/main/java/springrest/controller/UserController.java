@@ -2,6 +2,7 @@ package springrest.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,6 +16,7 @@ import springrest.security.jwt.JwtUtils;
 import springrest.security.services.UserDetailsImpl;
 import springrest.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.stream.Collectors;
 
@@ -69,8 +71,15 @@ public class UserController {
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
   }
 
+  @PreAuthorize("hasRole('USER')")
   @PostMapping("/changeUser")
-  public boolean changeUser(@Valid @RequestBody EditUser editUser) {
-    return userService.changeUser(editUser);
+  public boolean changeUser(HttpServletRequest request, @Valid @RequestBody EditUser editUser) {
+    return userService.changeUser(request, editUser);
+  }
+
+  @PreAuthorize("hasRole('USER')")
+  @DeleteMapping("/")
+  public boolean deleteUser(HttpServletRequest request) {
+    return userService.deleteUser(request);
   }
 }
