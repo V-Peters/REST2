@@ -70,7 +70,12 @@ public class MeetingService {
     return true;
   }
 
-  public boolean updateSignup(Map<String, Boolean> signUps, int userId) {
+  public boolean updateSignup(HttpServletRequest request, Map<String, Boolean> signUps) {
+    User user = userRepository.findByUsername(request.getRemoteUser()).orElse(null);
+    if (user == null) {
+      return false;
+    }
+    int userId = user.getId();
     for (Object meetingId : signUps.keySet().toArray()) {
       if (meetingUserRepository.findByIdUserAndIdMeeting(userId, Integer.parseInt(meetingId.toString())).isPresent() && !signUps.get(meetingId)) {
         meetingUserRepository.deleteByIdUserAndIdMeeting(userId, Integer.parseInt(meetingId.toString()));

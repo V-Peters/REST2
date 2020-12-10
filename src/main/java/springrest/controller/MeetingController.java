@@ -49,10 +49,10 @@ public class MeetingController {
     return meetingService.updateDisplay(displays);
   }
 
-  @PostMapping("/updateSignup/{userId}")
+  @PostMapping("/updateSignup")
   @PreAuthorize("hasRole('USER')")
-  public boolean updateSignup(@RequestBody Map<String, Boolean> signUps, @PathVariable int userId) {
-    return meetingService.updateSignup(signUps, userId);
+  public boolean updateSignup(HttpServletRequest request, @RequestBody Map<String, Boolean> signUps) {
+    return meetingService.updateSignup(request, signUps);
   }
 
   @GetMapping("/getUser/{id}")
