@@ -10,7 +10,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import springrest.entity.User;
 import springrest.payload.request.EditUser;
-import springrest.payload.response.MessageResponse;
 import springrest.payload.response.UserResponse;
 import springrest.security.jwt.JwtUtils;
 import springrest.security.services.UserDetailsImpl;
@@ -20,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = {"https://meeting-user-app.herokuapp.com"})
+@CrossOrigin(origins = {"${CROSS_ORIGIN}"})
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -58,17 +57,12 @@ public class UserController {
   }
 
   @PostMapping("/register")
-  public ResponseEntity<?> registerUser(@Valid @RequestBody User registerUser) {
-    if (userService.existsByUsername(registerUser.getUsername())) {
-      return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
-    }
-
-    if (userService.existsByEmail(registerUser.getEmail())) {
-      return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
+  public boolean registerUser(@Valid @RequestBody User registerUser) {
+    if (userService.existsByUsername(registerUser.getUsername()) || userService.existsByEmail(registerUser.getEmail())) {
+      return false;
     }
     userService.save(registerUser);
-
-    return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    return true;
   }
 
   @PreAuthorize("hasRole('USER')")
