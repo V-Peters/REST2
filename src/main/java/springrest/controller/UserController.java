@@ -13,6 +13,7 @@ import springrest.payload.request.EditUser;
 import springrest.payload.response.UserResponse;
 import springrest.security.jwt.JwtUtils;
 import springrest.security.services.UserDetailsImpl;
+import springrest.service.EmailService;
 import springrest.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +24,10 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
+  @Autowired
+  EmailService emailService;
+
   @Autowired
   AuthenticationManager authenticationManager;
 
@@ -63,6 +68,15 @@ public class UserController {
     }
     userService.save(registerUser);
     return true;
+  }
+
+  @PostMapping("/forgotPassword")
+  public boolean forgotPassword(@Valid @RequestBody User forgotPassword) {
+    if (userService.forgotPassword(forgotPassword)) {
+      emailService.sendEmail(forgotPassword.getEmail());
+      return true;
+    }
+    return false;
   }
 
   @PreAuthorize("hasRole('USER')")

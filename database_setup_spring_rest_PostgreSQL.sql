@@ -3,7 +3,7 @@
 -----------------------------------------------------------------------------------------------------------------------------------------
 
 DROP SCHEMA IF EXISTS "meeting_user_data" CASCADE;
-CREATE SCHEMA "meeting_user_data" AUTHORIZATION sixkrtwdufpudp;
+CREATE SCHEMA "meeting_user_data" AUTHORIZATION cwhjeextvmzolm;
 
 
 -----------------------------------------------------------------------------------------------------------------------------------------

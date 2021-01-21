@@ -21,6 +21,7 @@ public class UserService {
 
   @Autowired
   AuthenticationManager authenticationManager;
+
   @Autowired
   UserRepository userRepository;
 
@@ -94,5 +95,12 @@ public class UserService {
 
   private boolean checkIfDeleted(String username) {
     return userRepository.findByUsername(username).orElse(null) == null;
+  }
+
+  public boolean forgotPassword(User forgotPassword) {
+    if (existsByUsername(forgotPassword.getUsername())){
+      return forgotPassword.getEmail().equals(userRepository.findByUsername(forgotPassword.getUsername()).orElse(null).getEmail());
+    }
+    return false;
   }
 }
