@@ -1,80 +1,61 @@
 package springrest.service;
 
-import com.sendgrid.Method;
-import com.sendgrid.Request;
-import com.sendgrid.Response;
-import com.sendgrid.SendGrid;
-import com.sendgrid.helpers.mail.Mail;
-import com.sendgrid.helpers.mail.objects.Content;
-import com.sendgrid.helpers.mail.objects.Email;
+import com.squareup.okhttp.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EmailService {
 
-  public void sendEmail(String email) {
-    Email from = new Email("test@example.com");
-    String subject = "Hello World from the SendGrid Java Library!";
-    Email to = new Email(email);
-    Content content = new Content("text/plain", "Hello, Email!");
-    Mail mail = new Mail(from, subject, to, content);
+  @Value("${CROSS_ORIGIN}")
+  String crossOrigin;
 
-    SendGrid sg = new SendGrid(System.getenv("${SENDGRID_API_KEY}"));
-    Request request = new Request();
+  @Value("${TRUSTIFI_URL}")
+  String url;
+
+  @Value("${TRUSTIFI_KEY}")
+  String key;
+
+  @Value("${TRUSTIFI_SECRET}")
+  String secret;
+
+  public void sendEmail(String username, String email) {
+    OkHttpClient client = new OkHttpClient();
+    MediaType mediaType = MediaType.parse("application/json");
+    String html = buildHTML(username);
+    RequestBody body = RequestBody.create(mediaType, "{\n  \"recipients\": [{\"email\": \"" + email + "\", \"name\": \"User\", \"phone\":{\"country_code\":\"+1\",\"phone_number\":\"1111111111\"}}],\n  \"lists\": [],\n  \"contacts\": [],\n  \"attachments\": [],\n  \"title\": \"Passwort vergessen\",\n  \"html\": \"" + html + "\",\n  \"methods\": { \n    \"postmark\": false,\n    \"secureSend\": false,\n    \"encryptContent\": false,\n    \"secureReply\": false \n  }\n}");
+    Request request = new Request.Builder()
+        .url(url)
+        .method("POST", body)
+        .addHeader("x-trustifi-key", key)
+        .addHeader("x-trustifi-secret", secret)
+        .addHeader("Content-Type", "application/json")
+        .build();
     try {
-      request.setMethod(Method.POST);
-      request.setEndpoint("mail/send");
-      request.setBody(mail.build());
-      Response response = sg.api(request);
-      System.out.println(response.getStatusCode());
-      System.out.println(response.getBody());
-      System.out.println(response.getHeaders());
+      Response response = client.newCall(request).execute();
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
-//  public void sendEmail(String email) {
-//    System.out.println(email);
-//    createEmail(email);
-//  }
-//
-//  public void createEmail(String email) {
-//    Properties prop = new Properties();
-//    prop.put("mail.smtp.auth", true);
-//    prop.put("mail.smtp.starttls.enable", "true");
-//    prop.put("mail.smtp.host", "smtp.mailtrap.io");
-//    prop.put("mail.smtp.port", "25");
-//    prop.put("mail.smtp.ssl.trust", "smtp.mailtrap.io");
-//
-//    Session session = Session.getInstance(prop, new Authenticator() {
-//      @Override
-//      protected PasswordAuthentication getPasswordAuthentication() {
-//        return new PasswordAuthentication("mail.pop3.user", "mail.pop3.password");
-//      }
-//    });
-//
-//    Message message = new MimeMessage(session);
-//    try {
-//      message.setFrom(new InternetAddress("test@test.com"));
-//      message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
-//      message.setSubject("Mail Subject");
-//
-//      String msg = "This is my first email using JavaMailer";
-//
-//      MimeBodyPart mimeBodyPart = new MimeBodyPart();
-//      mimeBodyPart.setContent(msg, "text/html");
-//
-//      Multipart multipart = new MimeMultipart();
-//      multipart.addBodyPart(mimeBodyPart);
-//
-//      message.setContent(multipart);
-//
-//      Transport.send(message);
-//
-//    } catch (MessagingException e) {
-//      e.printStackTrace();
-//    }
-//  }
+  public String buildHTML(String username) {
+    String crossOriginUrl = crossOrigin + "/set-new-password";
+    System.out.println(crossOriginUrl);
+    return
+        "<p>Hallo " + username + ",</p>" +
+        "<p>Sie erhalten diese E-Mail, weil Sie angegeben haben Ihr Passwort für <b>Meeting-User</b> vergessen zu haben.</p>" +
+        "<p>Sollten Sie diese E-Mail versehentlich zugesendet bekommen haben, dann können Sie sie einfach ignorieren.</p>" +
+        "<p><br></p>" +
+        "<p>Um ein neues Passwort für ihren Account eingeben zu können klicken Sie <a href='" + crossOriginUrl + "'>hier.</a></p>" +
+        "<p><br></p>" +
+        "<p>Alternativ können Sie auch diesen Link in Ihren Browser kopieren:</p>" +
+        "<a href='" + crossOriginUrl + "'>" + crossOriginUrl + "</a>" +
+        "<p><br></p>" +
+        "<p>Sie können übrigens nicht auf diese E-Mail antworten.</p>" +
+        "<p><br></p>" +
+        "<p><br></p>" +
+        "<p>Mit Freundlichen Grüßen</p>" +
+        "<p>Ihr Meeting-User Support</p>";
+  }
 
 }

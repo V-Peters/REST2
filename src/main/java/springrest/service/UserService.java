@@ -97,10 +97,17 @@ public class UserService {
     return userRepository.findByUsername(username).orElse(null) == null;
   }
 
-  public boolean forgotPassword(User forgotPassword) {
+  public boolean matchesUsernameAndEmail(User forgotPassword) {
     if (existsByUsername(forgotPassword.getUsername())){
       return forgotPassword.getEmail().equals(userRepository.findByUsername(forgotPassword.getUsername()).orElse(null).getEmail());
     }
     return false;
+  }
+
+  public boolean setNewPassword(User setNewPassword) {
+    User user = userRepository.findByUsername(setNewPassword.getUsername()).orElse(null);
+    user.setPassword(encoder.encode(setNewPassword.getPassword()));
+    userRepository.save(user);
+    return user.getPassword().equals(userRepository.findByUsername(setNewPassword.getUsername()).orElse(null).getPassword());
   }
 }

@@ -72,11 +72,16 @@ public class UserController {
 
   @PostMapping("/forgotPassword")
   public boolean forgotPassword(@Valid @RequestBody User forgotPassword) {
-    if (userService.forgotPassword(forgotPassword)) {
-      emailService.sendEmail(forgotPassword.getEmail());
+    if (userService.matchesUsernameAndEmail(forgotPassword)) {
+      emailService.sendEmail(forgotPassword.getUsername(), forgotPassword.getEmail());
       return true;
     }
     return false;
+  }
+
+  @PostMapping("/setNewPassword")
+  public boolean setNewPassword(@Valid @RequestBody User setNewPassword) {
+    return userService.setNewPassword(setNewPassword);
   }
 
   @PreAuthorize("hasRole('USER')")
