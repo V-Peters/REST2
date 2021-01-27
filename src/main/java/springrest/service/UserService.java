@@ -52,6 +52,8 @@ public class UserService {
     roles.add(userRole);
     registerUser.setRoles(roles);
 
+    registerUser.setLastUpdated(LocalDateTime.now());
+
     userRepository.save(registerUser);
   }
 
