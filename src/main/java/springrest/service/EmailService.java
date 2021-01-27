@@ -1,11 +1,16 @@
 package springrest.service;
 
 import com.squareup.okhttp.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import springrest.security.jwt.JwtUtils;
 
 @Service
 public class EmailService {
+
+  @Autowired
+  JwtUtils jwtUtils;
 
   @Value("${CROSS_ORIGIN}")
   String crossOrigin;
@@ -39,7 +44,7 @@ public class EmailService {
   }
 
   public String buildHTML(String username) {
-    String crossOriginUrl = crossOrigin + "/set-new-password";
+    String crossOriginUrl = crossOrigin + "/set-new-password?rpt=" + jwtUtils.generateResetPasswordToken(username);
     System.out.println(crossOriginUrl);
     return
         "<p>Hallo " + username + ",</p>" +

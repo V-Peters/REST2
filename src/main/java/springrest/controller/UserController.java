@@ -80,8 +80,8 @@ public class UserController {
   }
 
   @PostMapping("/setNewPassword")
-  public boolean setNewPassword(@Valid @RequestBody User setNewPassword) {
-    return userService.setNewPassword(setNewPassword);
+  public boolean setNewPassword(HttpServletRequest request, @Valid @RequestBody User setNewPassword) {
+    return userService.setNewPassword(request, setNewPassword);
   }
 
   @PreAuthorize("hasRole('USER')")

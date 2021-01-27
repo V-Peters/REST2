@@ -10,6 +10,7 @@ import springrest.entity.User;
 import springrest.payload.request.EditUser;
 import springrest.repository.RoleRepository;
 import springrest.repository.UserRepository;
+import springrest.security.jwt.JwtUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -18,6 +19,9 @@ import java.util.Set;
 
 @Service
 public class UserService {
+
+  @Autowired
+  JwtUtils jwtUtils;
 
   @Autowired
   AuthenticationManager authenticationManager;
@@ -104,10 +108,14 @@ public class UserService {
     return false;
   }
 
-  public boolean setNewPassword(User setNewPassword) {
-    User user = userRepository.findByUsername(setNewPassword.getUsername()).orElse(null);
-    user.setPassword(encoder.encode(setNewPassword.getPassword()));
-    userRepository.save(user);
-    return user.getPassword().equals(userRepository.findByUsername(setNewPassword.getUsername()).orElse(null).getPassword());
+  public boolean setNewPassword(HttpServletRequest request, User setNewPassword) {
+    String rpt = request.getHeader("rpt");
+    if (rpt != null && jwtUtils.validateJwtToken(rpt)) {
+      User user = userRepository.findByUsername(jwtUtils.getUserNameFromJwtToken(rpt)).orElse(null);
+      user.setPassword(encoder.encode(setNewPassword.getPassword()));
+      userRepository.save(user);
+      return user.getPassword().equals(userRepository.findByUsername(setNewPassword.getUsername()).orElse(null).getPassword());
+    }
+    return false;
   }
 }
