@@ -44,6 +44,7 @@ CREATE TABLE `spring-rest`.`user` (
   `company` varchar(100) NOT NULL,
   `created` datetime DEFAULT now(),
   `last_updated` datetime DEFAULT now(),
+  `reset_password_secret` char(255),
   PRIMARY KEY (`id`)
 );
 

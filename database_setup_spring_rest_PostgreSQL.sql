@@ -34,6 +34,7 @@ CREATE TABLE "meeting_user_data"."user" (
   "company" character varying(100) NOT NULL,
   "created" timestamp without time zone DEFAULT now(),
   "last_updated" timestamp without time zone DEFAULT now(),
+  "reset_password_secret" character(255),
   PRIMARY KEY (id)
 );
 
