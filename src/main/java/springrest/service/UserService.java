@@ -110,13 +110,21 @@ public class UserService {
     return false;
   }
 
+  public boolean setResetPasswordSecret(String username, String secret) {
+    User user = userRepository.findByUsername(username).orElse(null);
+    user.setResetPasswordSecret(secret);
+    userRepository.save(user);
+    return secret.equals(userRepository.findByUsername(username).orElse(null).getResetPasswordSecret());
+  }
+
   public boolean setNewPassword(HttpServletRequest request, User setNewPassword) {
-    String rpt = request.getHeader("rpt");
-    if (rpt != null && jwtUtils.validateJwtToken(rpt)) {
-      User user = userRepository.findByUsername(jwtUtils.getUserNameFromJwtToken(rpt)).orElse(null);
+    String rps = request.getHeader("rps");
+    if (rps != null && userRepository.existsByResetPasswordSecret(rps)) {
+      User user = userRepository.findByResetPasswordSecret(rps).orElse(null);
       user.setPassword(encoder.encode(setNewPassword.getPassword()));
+      user.setResetPasswordSecret(null);
       userRepository.save(user);
-      return user.getPassword().equals(userRepository.findByUsername(setNewPassword.getUsername()).orElse(null).getPassword());
+      return true;
     }
     return false;
   }

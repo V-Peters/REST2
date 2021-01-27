@@ -1,16 +1,19 @@
 package springrest.service;
 
-import com.squareup.okhttp.*;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import springrest.security.jwt.JwtUtils;
 
 @Service
 public class EmailService {
 
   @Autowired
-  JwtUtils jwtUtils;
+  UserService userService;
 
   @Value("${CROSS_ORIGIN}")
   String crossOrigin;
@@ -37,14 +40,14 @@ public class EmailService {
         .addHeader("Content-Type", "application/json")
         .build();
     try {
-      Response response = client.newCall(request).execute();
+//      Response response = client.newCall(request).execute();      Das Senden von Emails erstmal abgestellt, da ich nur begrenze E-Mails senden kann
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
   public String buildHTML(String username) {
-    String crossOriginUrl = crossOrigin + "/set-new-password?rpt=" + jwtUtils.generateResetPasswordToken(username);
+    String crossOriginUrl = crossOrigin + "/set-new-password?rps=" + generateResetPasswordSecretAndUpdateUser(username);
     System.out.println(crossOriginUrl);
     return
         "<p>Hallo " + username + ",</p>" +
@@ -61,6 +64,12 @@ public class EmailService {
         "<p><br></p>" +
         "<p>Mit Freundlichen Grüßen</p>" +
         "<p>Ihr Meeting-User Support</p>";
+  }
+
+  private String generateResetPasswordSecretAndUpdateUser(String username) {
+    String secret = RandomStringUtils.randomAlphanumeric(255);
+    userService.setResetPasswordSecret(username, secret);
+    return secret;
   }
 
 }
