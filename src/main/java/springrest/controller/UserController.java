@@ -1,6 +1,6 @@
 package springrest.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,22 +24,14 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = {"${CROSS_ORIGIN}"})
 @RestController
 @RequestMapping("/user")
+@RequiredArgsConstructor
 public class UserController {
 
-  @Autowired
-  EmailService emailService;
-
-  @Autowired
-  ResetPasswordService resetPasswordService;
-
-  @Autowired
-  AuthenticationManager authenticationManager;
-
-  @Autowired
-  UserService userService;
-
-  @Autowired
-  JwtUtils jwtUtils;
+  private final EmailService emailService;
+  private final ResetPasswordService resetPasswordService;
+  private final AuthenticationManager authenticationManager;
+  private final UserService userService;
+  private final JwtUtils jwtUtils;
 
   @PostMapping("/checkIfUsernameExists")
   public boolean checkIfUsernameExists(@RequestBody String username) {

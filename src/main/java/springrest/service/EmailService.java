@@ -4,15 +4,15 @@ import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class EmailService {
 
-  @Autowired
-  ResetPasswordService resetPasswordService;
+  private final ResetPasswordService resetPasswordService;
 
   @Value("${CROSS_ORIGIN}")
   String crossOrigin;

@@ -1,7 +1,7 @@
 package springrest.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import springrest.entity.ResetPassword;
@@ -10,13 +10,11 @@ import springrest.repository.ResetPasswordRepository;
 import java.time.LocalDateTime;
 
 @Service
+@RequiredArgsConstructor
 public class ResetPasswordService {
 
-  @Autowired
-  UserService userService;
-
-  @Autowired
-  ResetPasswordRepository resetPasswordRepository;
+  private final UserService userService;
+  private final ResetPasswordRepository resetPasswordRepository;
 
   public String generateAndSaveResetPasswordSecret(String username) {
     String secret = RandomStringUtils.randomAlphanumeric(255);

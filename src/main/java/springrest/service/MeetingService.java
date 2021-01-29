@@ -1,6 +1,6 @@
 package springrest.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import springrest.entity.Meeting;
 import springrest.entity.MeetingUser;
@@ -11,19 +11,17 @@ import springrest.repository.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class MeetingService {
 
-  @Autowired
-  private MeetingRepository meetingRepository;
-
-  @Autowired
-  private UserRepository userRepository;
-
-  @Autowired
-  private MeetingUserRepository meetingUserRepository;
+  private final MeetingRepository meetingRepository;
+  private final UserRepository userRepository;
+  private final MeetingUserRepository meetingUserRepository;
 
   public List<Meeting> getMeetings(HttpServletRequest request) {
     List<Meeting> meetings;

@@ -1,6 +1,6 @@
 package springrest.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import springrest.entity.Meeting;
@@ -14,10 +14,10 @@ import java.util.Map;
 @CrossOrigin(origins = {"${CROSS_ORIGIN}"})
 @RestController
 @RequestMapping("/meetings")
+@RequiredArgsConstructor
 public class MeetingController {
 
-  @Autowired
-  private MeetingService meetingService;
+  private final MeetingService meetingService;
 
   @GetMapping()
   @PreAuthorize("hasRole('ADMIN') || hasRole('USER')")

@@ -1,6 +1,6 @@
 package springrest.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,7 +10,6 @@ import springrest.entity.User;
 import springrest.payload.request.EditUser;
 import springrest.repository.RoleRepository;
 import springrest.repository.UserRepository;
-import springrest.security.jwt.JwtUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -18,25 +17,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-  @Autowired
-  JwtUtils jwtUtils;
-
-  @Autowired
-  ResetPasswordService resetPasswordService;
-
-  @Autowired
-  AuthenticationManager authenticationManager;
-
-  @Autowired
-  UserRepository userRepository;
-
-  @Autowired
-  RoleRepository roleRepository;
-
-  @Autowired
-  PasswordEncoder encoder;
+  private final ResetPasswordService resetPasswordService;
+  private final UserRepository userRepository;
+  private final RoleRepository roleRepository;
+  private final PasswordEncoder encoder;
 
   public Boolean existsByUsername(String username) {
     return userRepository.existsByUsername(username);
