@@ -24,6 +24,9 @@ public class UserService {
   JwtUtils jwtUtils;
 
   @Autowired
+  ResetPasswordService resetPasswordService;
+
+  @Autowired
   AuthenticationManager authenticationManager;
 
   @Autowired
@@ -110,20 +113,18 @@ public class UserService {
     return false;
   }
 
-  public boolean setResetPasswordSecret(String username, String secret) {
-    User user = userRepository.findByUsername(username).orElse(null);
-    user.setResetPasswordSecret(secret);
-    userRepository.save(user);
-    return secret.equals(userRepository.findByUsername(username).orElse(null).getResetPasswordSecret());
+  public int convertUsernameToId(String username) {
+    return userRepository.findByUsername(username).orElse(null).getId();
   }
 
   public boolean setNewPassword(HttpServletRequest request, User setNewPassword) {
     String rps = request.getHeader("rps");
-    if (rps != null && userRepository.existsByResetPasswordSecret(rps)) {
-      User user = userRepository.findByResetPasswordSecret(rps).orElse(null);
+    if (rps != null && resetPasswordService.existsByResetPasswordSecret(rps)) {
+      int idUser = resetPasswordService.getIdUser(rps);
+      User user = userRepository.findById(idUser).orElse(null);
       user.setPassword(encoder.encode(setNewPassword.getPassword()));
-      user.setResetPasswordSecret(null);
       userRepository.save(user);
+      resetPasswordService.deleteResetPasswordSecret(rps);
       return true;
     }
     return false;

@@ -68,7 +68,4 @@ public class User {
 
   private LocalDateTime lastUpdated;
 
-  @Size(min = 255, max = 255)
-  private String resetPasswordSecret;
-
 }
