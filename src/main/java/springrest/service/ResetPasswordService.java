@@ -46,4 +46,8 @@ public class ResetPasswordService {
   public int getIdUser(String secret) {
     return resetPasswordRepository.findBySecret(secret).orElse(null).getIdUser();
   }
+
+  public boolean existsById(int idUser) {
+    return resetPasswordRepository.existsByIdUser(idUser);
+  }
 }

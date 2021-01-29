@@ -14,6 +14,7 @@ import springrest.payload.response.UserResponse;
 import springrest.security.jwt.JwtUtils;
 import springrest.security.services.UserDetailsImpl;
 import springrest.service.EmailService;
+import springrest.service.ResetPasswordService;
 import springrest.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +28,9 @@ public class UserController {
 
   @Autowired
   EmailService emailService;
+
+  @Autowired
+  ResetPasswordService resetPasswordService;
 
   @Autowired
   AuthenticationManager authenticationManager;
@@ -72,7 +76,7 @@ public class UserController {
 
   @PostMapping("/forgotPassword")
   public boolean forgotPassword(@Valid @RequestBody User forgotPassword) {
-    if (userService.matchesUsernameAndEmail(forgotPassword)) {
+    if (userService.matchesUsernameAndEmail(forgotPassword) && resetPasswordService.existsById(userService.convertUsernameToId(forgotPassword.getUsername()))) {
       emailService.sendEmail(forgotPassword.getUsername(), forgotPassword.getEmail());
       return true;
     }
