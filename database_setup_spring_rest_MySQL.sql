@@ -44,7 +44,17 @@ CREATE TABLE `spring-rest`.`user` (
   `company` varchar(100) NOT NULL,
   `created` datetime DEFAULT now(),
   `last_updated` datetime DEFAULT now(),
-  `reset_password_secret` char(255),
+  PRIMARY KEY (`id`)
+);
+
+#########################################################################################################################################
+
+DROP TABLE IF EXISTS `spring-rest`.`reset_password`;
+CREATE TABLE `spring-rest`.`reset_password` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_user` int NOT NULL UNIQUE,
+  `secret` char(255) NOT NULL UNIQUE,
+  `valid_until` datetime NOT NULL,
   PRIMARY KEY (`id`)
 );
 
