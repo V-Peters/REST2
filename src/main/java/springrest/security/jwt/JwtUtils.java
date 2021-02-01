@@ -20,9 +20,6 @@ public class JwtUtils {
   @Value("${JWT_EXPIRATION_MS}")
   private int jwtExpirationMs;
 
-  @Value("${RESET_PASSWORD_TOKEN_EXPIRATION_MS}")
-  private int resetPasswordTokenExpirationMs;
-
   public String generateJwtToken(Authentication authentication) {
 
     UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();

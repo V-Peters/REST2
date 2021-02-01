@@ -1,9 +1,9 @@
 package springrest.service;
 
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,36 +17,30 @@ public class EmailService {
   @Value("${CROSS_ORIGIN}")
   String crossOrigin;
 
-  @Value("${TRUSTIFI_URL}")
-  String url;
+  @Value("${MAILGUN_DOMAIN}")
+  String domain;
 
-  @Value("${TRUSTIFI_KEY}")
+  @Value("${MAILGUN_API_KEY}")
   String key;
 
-  @Value("${TRUSTIFI_SECRET}")
-  String secret;
-
-  public void sendEmail(String username, String email) {
-    OkHttpClient client = new OkHttpClient();
-    MediaType mediaType = MediaType.parse("application/json");
-    String html = buildHTML(username);
-    RequestBody body = RequestBody.create(mediaType, "{\n  \"recipients\": [{\"email\": \"" + email + "\", \"name\": \"User\", \"phone\":{\"country_code\":\"+1\",\"phone_number\":\"1111111111\"}}],\n  \"lists\": [],\n  \"contacts\": [],\n  \"attachments\": [],\n  \"title\": \"Passwort vergessen\",\n  \"html\": \"" + html + "\",\n  \"methods\": { \n    \"postmark\": false,\n    \"secureSend\": false,\n    \"encryptContent\": false,\n    \"secureReply\": false \n  }\n}");
-    Request request = new Request.Builder()
-        .url(url)
-        .method("POST", body)
-        .addHeader("x-trustifi-key", key)
-        .addHeader("x-trustifi-secret", secret)
-        .addHeader("Content-Type", "application/json")
-        .build();
+  public boolean sendEmail(int idUser, String username, String email) {
+    HttpResponse<JsonNode> request = new HttpResponse<>(null, null);
     try {
-//      Response response = client.newCall(request).execute();      Das Senden von Emails erstmal abgestellt, da ich nur begrenze E-Mails senden kann
-    } catch (Exception e) {
+      request = Unirest.post("https://api.mailgun.net/v3/" + domain + "/messages")
+      .basicAuth("api", key)
+          .queryString("from", "donotreply@meeting-user.com")
+          .queryString("to", email)
+          .queryString("subject", "Passwort vergessen")
+          .queryString("html", buildHTML(username, idUser))
+          .asJson();
+    } catch (UnirestException e) {
       e.printStackTrace();
     }
+    return request.getStatus() == 200;
   }
 
-  public String buildHTML(String username) {
-    String crossOriginUrl = crossOrigin + "/set-new-password?rps=" + resetPasswordService.generateAndSaveResetPasswordSecret(username);
+  public String buildHTML(String username, int idUser) {
+    String crossOriginUrl = crossOrigin + "/set-new-password?rps=" + resetPasswordService.generateAndSaveResetPasswordSecret(idUser);
     System.out.println(crossOriginUrl);
     return
         "<p>Hallo " + username + ",</p>" +

@@ -68,9 +68,8 @@ public class UserController {
 
   @PostMapping("/forgotPassword")
   public boolean forgotPassword(@Valid @RequestBody User forgotPassword) {
-    if (userService.matchesUsernameAndEmail(forgotPassword) && resetPasswordService.existsById(userService.convertUsernameToId(forgotPassword.getUsername()))) {
-      emailService.sendEmail(forgotPassword.getUsername(), forgotPassword.getEmail());
-      return true;
+    if (userService.matchesUsernameAndEmail(forgotPassword) && !resetPasswordService.existsById(userService.convertUsernameToId(forgotPassword.getUsername()))) {
+      return emailService.sendEmail(userService.convertUsernameToId(forgotPassword.getUsername()), forgotPassword.getUsername(), forgotPassword.getEmail());
     }
     return false;
   }

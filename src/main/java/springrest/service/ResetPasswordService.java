@@ -13,17 +13,15 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class ResetPasswordService {
 
-  private final UserService userService;
   private final ResetPasswordRepository resetPasswordRepository;
 
-  public String generateAndSaveResetPasswordSecret(String username) {
+  public String generateAndSaveResetPasswordSecret(int idUser) {
     String secret = RandomStringUtils.randomAlphanumeric(255);
-    saveResetPasswordSecret(username, secret);
+    saveResetPasswordSecret(idUser, secret);
     return secret;
   }
 
-  private void saveResetPasswordSecret(String username, String secret) {
-    int idUser = userService.convertUsernameToId(username);
+  private void saveResetPasswordSecret(int idUser, String secret) {
     ResetPassword resetPassword = new ResetPassword(0, idUser, secret, LocalDateTime.now().plusMinutes(10));
     resetPasswordRepository.save(resetPassword);
   }
