@@ -15,16 +15,16 @@ public class EmailService {
   private final ResetPasswordService resetPasswordService;
 
   @Value("${CROSS_ORIGIN}")
-  String crossOrigin;
+  private String crossOrigin;
 
   @Value("${MAILGUN_DOMAIN}")
-  String domain;
+  private String domain;
 
   @Value("${MAILGUN_API_KEY}")
-  String key;
+  private String key;
 
   public boolean sendEmail(int idUser, String username, String email) {
-    HttpResponse<JsonNode> request = new HttpResponse<>(null, null);
+    HttpResponse<JsonNode> request = null;
     try {
       request = Unirest.post("https://api.mailgun.net/v3/" + domain + "/messages")
       .basicAuth("api", key)
@@ -41,7 +41,6 @@ public class EmailService {
 
   public String buildHTML(String username, int idUser) {
     String crossOriginUrl = crossOrigin + "/set-new-password?rps=" + resetPasswordService.generateAndSaveResetPasswordSecret(idUser);
-    System.out.println(crossOriginUrl);
     return
         "<p>Hallo " + username + ",</p>" +
         "<p>Sie erhalten diese E-Mail, weil Sie angegeben haben Ihr Passwort für <b>Meeting-User</b> vergessen zu haben.</p>" +
