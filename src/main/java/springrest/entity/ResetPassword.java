@@ -20,13 +20,11 @@ public class ResetPassword {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
 
-//  @NotBlank
   private int idUser;
 
   @Size(min = 255, max = 255)
   @NotBlank
   private String secret;
 
-//  @NotBlank
   private LocalDateTime validUntil;
 }
