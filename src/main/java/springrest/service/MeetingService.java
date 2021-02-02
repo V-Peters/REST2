@@ -29,17 +29,17 @@ public class MeetingService {
       meetings = meetingRepository.findAll();
     } else {
       meetings = meetingRepository.findByDisplayTrue();
-      for (Meeting meeting: meetings) {
+      for (Meeting meeting : meetings) {
         meeting.setUsers(new HashSet<>());
       }
     }
-      return meetings;
+    return meetings;
   }
 
   public Meeting getMeeting(int id) {
     Meeting meeting = meetingRepository.findById(id).orElse(null);
     if (meeting != null) {
-      for (User user: meeting.getUsers()){
+      for (User user : meeting.getUsers()) {
         user.setPassword(null);
       }
     }
@@ -75,9 +75,9 @@ public class MeetingService {
     }
     int userId = user.getId();
     for (Object meetingId : signUps.keySet().toArray()) {
-      if (meetingUserRepository.findByIdUserAndIdMeeting(userId, Integer.parseInt(meetingId.toString())).isPresent() && !signUps.get(meetingId)) {
-        meetingUserRepository.deleteByIdUserAndIdMeeting(userId, Integer.parseInt(meetingId.toString()));
-      } else if (!meetingUserRepository.findByIdUserAndIdMeeting(userId, Integer.parseInt(meetingId.toString())).isPresent() && signUps.get(meetingId)) {
+      if (meetingUserRepository.findByUserIdAndMeetingId(userId, Integer.parseInt(meetingId.toString())).isPresent() && !signUps.get(meetingId)) {
+        meetingUserRepository.deleteByUserIdAndMeetingId(userId, Integer.parseInt(meetingId.toString()));
+      } else if (!meetingUserRepository.findByUserIdAndMeetingId(userId, Integer.parseInt(meetingId.toString())).isPresent() && signUps.get(meetingId)) {
         meetingUserRepository.save(new MeetingUser(Integer.parseInt(meetingId.toString()), userId));
       }
     }

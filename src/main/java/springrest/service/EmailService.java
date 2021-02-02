@@ -23,14 +23,14 @@ public class EmailService {
   @Value("${MAILGUN_API_KEY}")
   private String key;
 
-  public boolean sendEmail(int idUser, String username, String email) {
+  public boolean sendEmail(int userId, String username, String email) {
     try {
       HttpResponse<JsonNode> request = Unirest.post("https://api.mailgun.net/v3/" + domain + "/messages")
       .basicAuth("api", key)
           .queryString("from", "donotreply@meeting-user.com")
           .queryString("to", email)
           .queryString("subject", "Passwort vergessen")
-          .queryString("html", buildHTML(username, idUser))
+          .queryString("html", buildHTML(username, userId))
           .asJson();
       return request.getStatus() == 200;
     } catch (UnirestException e) {
@@ -39,8 +39,8 @@ public class EmailService {
     }
   }
 
-  public String buildHTML(String username, int idUser) {
-    String crossOriginUrl = crossOrigin + "/set-new-password?rps=" + resetPasswordService.generateAndSaveResetPasswordSecret(idUser);
+  public String buildHTML(String username, int userId) {
+    String crossOriginUrl = crossOrigin + "/set-new-password?rps=" + resetPasswordService.generateAndSaveResetPasswordSecret(userId);
     return
         "<p>Hallo " + username + ",</p>" +
         "<p>Sie erhalten diese E-Mail, weil Sie angegeben haben Ihr Passwort für <b>Meeting-User</b> vergessen zu haben.</p>" +

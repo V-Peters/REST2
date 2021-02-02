@@ -15,7 +15,7 @@ public interface ResetPasswordRepository extends JpaRepository<ResetPassword, In
 
   boolean existsBySecret(String secret);
 
-  boolean existsByIdUser(int idUser);
+  boolean existsByUserId(int userId);
 
   @Transactional
   void deleteBySecret(String secret);

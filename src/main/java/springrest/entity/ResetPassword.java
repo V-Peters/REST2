@@ -20,7 +20,7 @@ public class ResetPassword {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
 
-  private int idUser;
+  private int userId;
 
   @Size(min = 255, max = 255)
   @NotBlank

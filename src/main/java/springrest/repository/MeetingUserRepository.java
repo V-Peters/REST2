@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public interface MeetingUserRepository extends JpaRepository<MeetingUser, Integer> {
 
-  Optional<MeetingUser> findByIdUserAndIdMeeting(int userId, int meetingId);
+  Optional<MeetingUser> findByUserIdAndMeetingId(int userId, int meetingId);
 
   @Transactional
-  void deleteByIdUserAndIdMeeting(int userId, int meetingId);
+  void deleteByUserIdAndMeetingId(int userId, int meetingId);
 
 }

@@ -126,8 +126,8 @@ public class UserService {
   public boolean setNewPassword(HttpServletRequest request, User setNewPassword) {
     String rps = request.getHeader("rps");
     if (rps != null && resetPasswordService.existsByResetPasswordSecret(rps)) {
-      int idUser = resetPasswordService.getIdUser(rps);
-      User user = userRepository.findById(idUser).orElse(null);
+      int userId = resetPasswordService.getUserId(rps);
+      User user = userRepository.findById(userId).orElse(null);
       user.setPassword(encoder.encode(setNewPassword.getPassword()));
       userRepository.save(user);
       resetPasswordService.deleteResetPasswordSecret(rps);

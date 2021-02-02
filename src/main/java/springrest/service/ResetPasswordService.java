@@ -15,14 +15,14 @@ public class ResetPasswordService {
 
   private final ResetPasswordRepository resetPasswordRepository;
 
-  public String generateAndSaveResetPasswordSecret(int idUser) {
+  public String generateAndSaveResetPasswordSecret(int userId) {
     String secret = RandomStringUtils.randomAlphanumeric(255);
-    saveResetPasswordSecret(idUser, secret);
+    saveResetPasswordSecret(userId, secret);
     return secret;
   }
 
-  private void saveResetPasswordSecret(int idUser, String secret) {
-    ResetPassword resetPassword = new ResetPassword(0, idUser, secret, LocalDateTime.now().plusMinutes(10));
+  private void saveResetPasswordSecret(int userId, String secret) {
+    ResetPassword resetPassword = new ResetPassword(0, userId, secret, LocalDateTime.now().plusMinutes(10));
     resetPasswordRepository.save(resetPassword);
   }
 
@@ -39,11 +39,11 @@ public class ResetPasswordService {
     return resetPasswordRepository.existsBySecret(rps);
   }
 
-  public int getIdUser(String secret) {
-    return resetPasswordRepository.findBySecret(secret).orElse(null).getIdUser();
+  public int getUserId(String secret) {
+    return resetPasswordRepository.findBySecret(secret).orElse(null).getUserId();
   }
 
-  public boolean existsById(int idUser) {
-    return resetPasswordRepository.existsByIdUser(idUser);
+  public boolean existsById(int userId) {
+    return resetPasswordRepository.existsByUserId(userId);
   }
 }

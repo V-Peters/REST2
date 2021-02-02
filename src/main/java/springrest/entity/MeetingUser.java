@@ -21,14 +21,14 @@ public class MeetingUser {
   private int id;
 
   @Column(name = "id_meeting")
-  private int idMeeting;
+  private int meetingId;
 
   @Column(name = "id_user")
-  private int idUser;
+  private int userId;
 
   public MeetingUser(int meetingId, int userId) {
-    this.idMeeting = meetingId;
-    this.idUser = userId;
+    this.meetingId = meetingId;
+    this.userId = userId;
   }
 
 }
