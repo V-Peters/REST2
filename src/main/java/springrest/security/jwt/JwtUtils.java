@@ -11,8 +11,8 @@ import springrest.security.services.UserDetailsImpl;
 import java.util.Date;
 
 @Component
-public class JwtUtils {
-  private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
+public class JWTUtils {
+  private static final Logger logger = LoggerFactory.getLogger(JWTUtils.class);
 
   @Value("${JWT_SECRET}")
   private String jwtSecret;
@@ -36,7 +36,7 @@ public class JwtUtils {
     return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
   }
 
-  public boolean validateJwtToken(String authToken) {
+  public boolean validateJWTToken(String authToken) {
     try {
       Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
       return true;

@@ -1,20 +1,29 @@
 package springrest.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import springrest.entity.ERole;
 import springrest.entity.Role;
 import springrest.entity.User;
 import springrest.payload.request.EditUser;
+import springrest.payload.response.UserResponse;
 import springrest.repository.RoleRepository;
 import springrest.repository.UserRepository;
+import springrest.security.jwt.JWTUtils;
+import springrest.security.services.UserDetailsImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +33,8 @@ public class UserService {
   private final UserRepository userRepository;
   private final RoleRepository roleRepository;
   private final PasswordEncoder encoder;
+  private final AuthenticationManager authenticationManager;
+  private final JWTUtils jwtUtils;
 
   public Boolean existsByUsername(String username) {
     return userRepository.existsByUsername(username);
@@ -31,6 +42,18 @@ public class UserService {
 
   public Boolean existsByEmail(String email) {
     return userRepository.existsByEmail(email);
+  }
+
+  public ResponseEntity<?> login(User loginUser) {
+    Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginUser.getUsername(), loginUser.getPassword()));
+
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+    String jwt = jwtUtils.generateJwtToken(authentication);
+
+    UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+    String role = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining());
+
+    return ResponseEntity.ok(new UserResponse(jwt, userDetails.getId(), userDetails.getUsername(), userDetails.getFirstname(), userDetails.getLastname(), userDetails.getEmail(), userDetails.getCompany(), role));
   }
 
   public void save(User registerUser) {
@@ -48,7 +71,6 @@ public class UserService {
   }
 
   public boolean changeUser(HttpServletRequest request, EditUser editUser) {
-    System.out.println(editUser);
     if ((editUser.getCurrentPassword() == null && editUser.getNewPassword() == null) || checkPassword(request)) {
       User user = userRepository.findByUsername(request.getRemoteUser()).orElse(null);
       user = mapUser(user, editUser);
@@ -61,9 +83,6 @@ public class UserService {
   public boolean checkPassword(HttpServletRequest request) {
     User user = userRepository.findByUsername(request.getRemoteUser()).orElse(null);
     if (user != null) {
-      System.out.println(request.getHeader("password"));
-      System.out.println(user.getPassword());
-      System.out.println(encoder.matches(request.getHeader("password"), user.getPassword()));
       return encoder.matches(request.getHeader("password"), user.getPassword());
     }
     return false;

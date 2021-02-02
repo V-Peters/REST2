@@ -1,6 +1,6 @@
 package springrest.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -14,8 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import springrest.security.jwt.AuthEntryPointJwt;
+import springrest.security.jwt.AuthEntryPointJWT;
 import springrest.security.jwt.AuthTokenFilter;
 import springrest.security.services.UserDetailsServiceImpl;
 
@@ -23,13 +22,11 @@ import springrest.security.services.UserDetailsServiceImpl;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableScheduling
+@RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-  @Autowired
-  UserDetailsServiceImpl userDetailsService;
-
-  @Autowired
-  private AuthEntryPointJwt unauthorizedHandler;
+  private final UserDetailsServiceImpl userDetailsService;
+  private final AuthEntryPointJWT unauthorizedHandler;
 
   @Bean
   public AuthTokenFilter authenticationJwtTokenFilter() {
