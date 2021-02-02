@@ -24,19 +24,19 @@ public class EmailService {
   private String key;
 
   public boolean sendEmail(int idUser, String username, String email) {
-    HttpResponse<JsonNode> request = null;
     try {
-      request = Unirest.post("https://api.mailgun.net/v3/" + domain + "/messages")
+      HttpResponse<JsonNode> request = Unirest.post("https://api.mailgun.net/v3/" + domain + "/messages")
       .basicAuth("api", key)
           .queryString("from", "donotreply@meeting-user.com")
           .queryString("to", email)
           .queryString("subject", "Passwort vergessen")
           .queryString("html", buildHTML(username, idUser))
           .asJson();
+      return request.getStatus() == 200;
     } catch (UnirestException e) {
       e.printStackTrace();
+      return false;
     }
-    return request.getStatus() == 200;
   }
 
   public String buildHTML(String username, int idUser) {
