@@ -37,7 +37,7 @@ public class MeetingService {
   }
 
   public Meeting getMeeting(int id) {
-    Meeting meeting = meetingRepository.findById(id).orElse(null);
+    Meeting meeting = meetingRepository.findById(id).orElseThrow(RuntimeException::new);
     if (meeting != null) {
       for (User user : meeting.getUsers()) {
         user.setPassword(null);
@@ -58,7 +58,7 @@ public class MeetingService {
 
   public boolean updateDisplay(Map<String, Boolean> displays) {
     for (Object display : displays.keySet().toArray()) {
-      Meeting meeting = meetingRepository.findById(Integer.parseInt(display.toString())).orElse(null);
+      Meeting meeting = meetingRepository.findById(Integer.parseInt(display.toString())).orElseThrow(RuntimeException::new);
       if (meeting == null) {
         return false;
       }
@@ -69,7 +69,7 @@ public class MeetingService {
   }
 
   public boolean updateSignup(HttpServletRequest request, Map<String, Boolean> signUps) {
-    User user = userRepository.findByUsername(request.getRemoteUser()).orElse(null);
+    User user = userRepository.findByUsername(request.getRemoteUser()).orElseThrow(RuntimeException::new);
     if (user == null) {
       return false;
     }
@@ -85,10 +85,9 @@ public class MeetingService {
   }
 
   public User getUser(int id) {
-    User tempUser = userRepository.findById(id).orElse(null);
-    if (tempUser != null) {
-      tempUser.setPassword(null);
-    }
-    return tempUser;
+    return userRepository.findById(id).map(user -> {
+      user.setPassword(null);
+      return user;
+    }).orElseThrow(RuntimeException::new);
   }
 }

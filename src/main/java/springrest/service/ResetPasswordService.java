@@ -40,7 +40,7 @@ public class ResetPasswordService {
   }
 
   public int getUserId(String secret) {
-    return resetPasswordRepository.findBySecret(secret).orElse(null).getUserId();
+    return resetPasswordRepository.findBySecret(secret).orElseThrow(RuntimeException::new).getUserId();
   }
 
   public boolean existsById(int userId) {

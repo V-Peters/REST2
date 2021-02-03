@@ -72,7 +72,7 @@ public class UserService {
 
   public boolean changeUser(HttpServletRequest request, EditUser editUser) {
     if ((editUser.getCurrentPassword() == null && editUser.getNewPassword() == null) || checkPassword(request)) {
-      User user = userRepository.findByUsername(request.getRemoteUser()).orElse(null);
+      User user = userRepository.findByUsername(request.getRemoteUser()).orElseThrow(RuntimeException::new);
       user = mapUser(user, editUser);
       userRepository.save(user);
       return true;
@@ -81,7 +81,7 @@ public class UserService {
   }
 
   public boolean checkPassword(HttpServletRequest request) {
-    User user = userRepository.findByUsername(request.getRemoteUser()).orElse(null);
+    User user = userRepository.findByUsername(request.getRemoteUser()).orElseThrow(RuntimeException::new);
     if (user != null) {
       return encoder.matches(request.getHeader("password"), user.getPassword());
     }
@@ -102,32 +102,32 @@ public class UserService {
 
   public boolean deleteUser(HttpServletRequest request) {
     if (checkPassword(request)) {
-      userRepository.deleteById(userRepository.findByUsername(request.getRemoteUser()).orElse(null).getId());
+      userRepository.deleteById(userRepository.findByUsername(request.getRemoteUser()).orElseThrow(RuntimeException::new).getId());
       return checkIfDeleted(request.getRemoteUser());
     }
     return false;
   }
 
   private boolean checkIfDeleted(String username) {
-    return userRepository.findByUsername(username).orElse(null) == null;
+    return userRepository.findByUsername(username).orElseThrow(RuntimeException::new) == null;
   }
 
   public boolean matchesUsernameAndEmail(User forgotPassword) {
     if (existsByUsername(forgotPassword.getUsername())){
-      return forgotPassword.getEmail().equals(userRepository.findByUsername(forgotPassword.getUsername()).orElse(null).getEmail());
+      return forgotPassword.getEmail().equals(userRepository.findByUsername(forgotPassword.getUsername()).orElseThrow(RuntimeException::new).getEmail());
     }
     return false;
   }
 
   public int convertUsernameToId(String username) {
-    return userRepository.findByUsername(username).orElse(null).getId();
+    return userRepository.findByUsername(username).orElseThrow(RuntimeException::new).getId();
   }
 
   public boolean setNewPassword(HttpServletRequest request, User setNewPassword) {
     String rps = request.getHeader("rps");
     if (rps != null && resetPasswordService.existsByResetPasswordSecret(rps)) {
       int userId = resetPasswordService.getUserId(rps);
-      User user = userRepository.findById(userId).orElse(null);
+      User user = userRepository.findById(userId).orElseThrow(RuntimeException::new);
       user.setPassword(encoder.encode(setNewPassword.getPassword()));
       userRepository.save(user);
       resetPasswordService.deleteResetPasswordSecret(rps);
