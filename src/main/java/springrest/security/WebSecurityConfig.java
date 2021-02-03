@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import springrest.security.jwt.AuthEntryPointJWT;
 import springrest.security.jwt.AuthTokenFilter;
+import springrest.security.jwt.JWTUtils;
 import springrest.security.services.UserDetailsServiceImpl;
 
 @Configuration
@@ -27,10 +28,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   private final UserDetailsServiceImpl userDetailsService;
   private final AuthEntryPointJWT unauthorizedHandler;
+  private final JWTUtils jwtUtils;
 
   @Bean
   public AuthTokenFilter authenticationJwtTokenFilter() {
-    return new AuthTokenFilter();
+    return new AuthTokenFilter(jwtUtils, userDetailsService);
   }
 
   @Override
