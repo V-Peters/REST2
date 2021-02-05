@@ -11,15 +11,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class EditUser {
-
-  private int id;
-
-  @Size(min = 5, max = 60)
-  private String currentPassword;
-
-  @Size(min = 5, max = 60)
-  private String newPassword;
+public class EditUserRequest {
 
   @NotBlank
   @Size(max = 50)
@@ -37,5 +29,4 @@ public class EditUser {
   @NotBlank
   @Size(max = 100)
   private String company;
-
 }

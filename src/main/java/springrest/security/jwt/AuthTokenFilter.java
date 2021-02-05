@@ -3,6 +3,7 @@ package springrest.security.jwt;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +21,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
   private final JWTUtils jwtUtils;
   private final UserDetailsServiceImpl userDetailsService;
+
+  @Value("${TYPE}")
+  private String type;
 
   private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
 
@@ -46,8 +50,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
   private String parseJwt(HttpServletRequest request) {
     String headerAuth = request.getHeader("Authorization");
 
-    if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
-      return headerAuth.substring(7, headerAuth.length());
+    if (StringUtils.hasText(headerAuth) && headerAuth.startsWith(type)) {
+      return headerAuth.substring(type.length());
     }
 
     return null;

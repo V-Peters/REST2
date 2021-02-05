@@ -1,13 +1,10 @@
 package springrest.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import springrest.entity.User;
-import springrest.payload.request.EditUser;
-import springrest.service.EmailService;
-import springrest.service.ResetPasswordService;
+import springrest.payload.request.EditPasswordRequest;
+import springrest.payload.request.EditUserRequest;
 import springrest.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,8 +16,6 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class UserController {
 
-  private final EmailService emailService;
-  private final ResetPasswordService resetPasswordService;
   private final UserService userService;
 
   @PostMapping("/checkIfUsernameExists")
@@ -33,37 +28,16 @@ public class UserController {
     return userService.existsByEmail(email);
   }
 
-  @PostMapping("/login")
-  public ResponseEntity<?> loginUser(@Valid @RequestBody User loginUser) {
-    return userService.login(loginUser);
-  }
-
-  @PostMapping("/register")
-  public boolean registerUser(@Valid @RequestBody User registerUser) {
-    if (userService.existsByUsername(registerUser.getUsername()) || userService.existsByEmail(registerUser.getEmail())) {
-      return false;
-    }
-    userService.save(registerUser);
-    return true;
-  }
-
-  @PostMapping("/forgotPassword")
-  public boolean forgotPassword(@Valid @RequestBody User forgotPassword) {
-    if (userService.matchesUsernameAndEmail(forgotPassword) && !resetPasswordService.existsById(userService.convertUsernameToId(forgotPassword.getUsername()))) {
-      return emailService.sendEmail(userService.convertUsernameToId(forgotPassword.getUsername()), forgotPassword.getUsername(), forgotPassword.getEmail());
-    }
-    return false;
-  }
-
-  @PostMapping("/setNewPassword")
-  public boolean setNewPassword(HttpServletRequest request, @Valid @RequestBody User setNewPassword) {
-    return userService.setNewPassword(request, setNewPassword);
+  @PreAuthorize("hasRole('USER')")
+  @PostMapping("/editUser")
+  public boolean editUser(HttpServletRequest request, @Valid @RequestBody EditUserRequest editUserRequest) {
+    return userService.editUser(request, editUserRequest);
   }
 
   @PreAuthorize("hasRole('USER')")
-  @PostMapping("/changeUser")
-  public boolean changeUser(HttpServletRequest request, @Valid @RequestBody EditUser editUser) {
-    return userService.changeUser(request, editUser);
+  @PostMapping("/editPassword")
+  public boolean editPassword(HttpServletRequest request, @Valid @RequestBody EditPasswordRequest editPasswordRequest) {
+    return userService.editPassword(request, editPasswordRequest);
   }
 
   @PreAuthorize("hasRole('USER')")
