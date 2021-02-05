@@ -21,11 +21,9 @@ public class MeetingUser {
   @Column(name = "id")
   private int id;
 
-  @NotBlank
   @Column(name = "meeting_id")
   private int meetingId;
 
-  @NotBlank
   @Column(name = "user_id")
   private int userId;
 
