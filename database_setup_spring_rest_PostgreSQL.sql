@@ -39,10 +39,10 @@ CREATE TABLE "meeting_user_data"."user" (
 
 -----------------------------------------------------------------------------------------------------------------------------------------
 
-DROP TABLE IF EXISTS "spring-rest"."reset_password";
-CREATE TABLE "spring-rest"."reset_password" (
+DROP TABLE IF EXISTS "meeting_user_data"."reset_password";
+CREATE TABLE "meeting_user_data"."reset_password" (
   "id" serial,
-  "id_user" integer NOT NULL UNIQUE,
+  "user_id" integer NOT NULL UNIQUE,
   "secret" character(255) NOT NULL UNIQUE,
   "valid_until" timestamp without time zone NOT NULL,
   PRIMARY KEY ("id")
@@ -62,8 +62,8 @@ CREATE TABLE "meeting_user_data"."role" (
 DROP TABLE IF EXISTS "meeting_user_data"."user_role";
 CREATE TABLE "meeting_user_data"."user_role" (
   "id" serial,
-  "id_user" integer NOT NULL UNIQUE,
-  "id_role" integer NOT NULL,
+  "user_id" integer NOT NULL UNIQUE,
+  "role_id" integer NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (id_user) REFERENCES "meeting_user_data"."user"(id) ON DELETE CASCADE,
   FOREIGN KEY (id_role) REFERENCES "meeting_user_data"."role"(id) ON DELETE CASCADE
@@ -74,8 +74,8 @@ CREATE TABLE "meeting_user_data"."user_role" (
 DROP TABLE IF EXISTS "meeting_user_data"."meeting_user";
 CREATE TABLE "meeting_user_data"."meeting_user" (
   "id" serial,
-  "id_meeting" integer NOT NULL,
-  "id_user" integer NOT NULL,
+  "meeting_id" integer NOT NULL,
+  "user_id" integer NOT NULL,
   "created" timestamp without time zone DEFAULT now(),
   "last_updated" timestamp without time zone DEFAULT now(),
   PRIMARY KEY (id),

@@ -39,13 +39,14 @@ public class Meeting {
   private boolean display;
 
   @JsonIgnore
+  @Column(name = "last_updated")
   private LocalDateTime lastUpdated;
 
   @JsonIgnoreProperties(value = {"username", "password", "meetings"})
   @ManyToMany
   @JoinTable(name = "meeting_user",
-          joinColumns = @JoinColumn(name = "id_meeting"),
-          inverseJoinColumns = @JoinColumn(name = "id_user"))
+          joinColumns = @JoinColumn(name = "meeting_id"),
+          inverseJoinColumns = @JoinColumn(name = "user_id"))
   private Set<User> users = new HashSet<>();
 
 }

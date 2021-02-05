@@ -52,7 +52,7 @@ CREATE TABLE `spring-rest`.`user` (
 DROP TABLE IF EXISTS `spring-rest`.`reset_password`;
 CREATE TABLE `spring-rest`.`reset_password` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `id_user` int NOT NULL UNIQUE,
+  `user_id` int NOT NULL UNIQUE,
   `secret` char(255) NOT NULL UNIQUE,
   `valid_until` datetime NOT NULL,
   PRIMARY KEY (`id`)
@@ -72,11 +72,11 @@ CREATE TABLE `spring-rest`.`role` (
 DROP TABLE IF EXISTS `spring-rest`.`user_role`;
 CREATE TABLE `spring-rest`.`user_role` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `id_user` INT NOT NULL UNIQUE,
-  `id_role` INT NOT NULL,
+  `user_id` INT NOT NULL UNIQUE,
+  `role_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`id_user`) REFERENCES `spring-rest`.`user`(`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`id_role`) REFERENCES `spring-rest`.`role`(`id`) ON DELETE CASCADE
+  FOREIGN KEY (`user_id`) REFERENCES `spring-rest`.`user`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`role_id`) REFERENCES `spring-rest`.`role`(`id`) ON DELETE CASCADE
 );
 
 #########################################################################################################################################
@@ -84,13 +84,13 @@ CREATE TABLE `spring-rest`.`user_role` (
 DROP TABLE IF EXISTS `spring-rest`.`meeting_user`;
 CREATE TABLE `spring-rest`.`meeting_user` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `id_meeting` INT NOT NULL,
-  `id_user` INT NOT NULL,
+  `meeting_id` INT NOT NULL,
+  `user_id` INT NOT NULL,
   `created` datetime DEFAULT now(),
   `last_updated` datetime DEFAULT now(),
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`id_meeting`) REFERENCES `spring-rest`.`meeting`(`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`id_user`) REFERENCES `spring-rest`.`user`(`id`) ON DELETE CASCADE
+  FOREIGN KEY (`meeting_id`) REFERENCES `spring-rest`.`meeting`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`user_id`) REFERENCES `spring-rest`.`user`(`id`) ON DELETE CASCADE
 );
 
 
@@ -139,8 +139,8 @@ VALUES
 #########################################################################################################################################
 
 INSERT INTO `spring-rest`.`user_role` (
-    `id_user`,
-    `id_role`)
+    `user_id`,
+    `role_id`)
 VALUES
 	(1, 1),
 	(2, 2),
@@ -152,8 +152,8 @@ VALUES
 #########################################################################################################################################
 
 INSERT INTO `spring-rest`.`meeting_user` (
-    `id_meeting`,
-    `id_user`) 
+    `meeting_id`,
+    `user_id`) 
 VALUES
 	(1, 2),
 	(2, 2),

@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "role")
@@ -17,10 +18,12 @@ public class Role {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id")
   private Integer id;
 
   @Enumerated(EnumType.STRING)
-  @Column(length = 20)
+  @Size(max = 20)
+  @Column(name = "name")
   private ERole name;
 
 }

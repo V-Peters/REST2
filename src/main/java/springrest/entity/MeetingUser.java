@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "meeting_user")
@@ -20,10 +21,12 @@ public class MeetingUser {
   @Column(name = "id")
   private int id;
 
-  @Column(name = "id_meeting")
+  @NotBlank
+  @Column(name = "meeting_id")
   private int meetingId;
 
-  @Column(name = "id_user")
+  @NotBlank
+  @Column(name = "user_id")
   private int userId;
 
   public MeetingUser(int meetingId, int userId) {

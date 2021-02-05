@@ -18,14 +18,19 @@ public class ResetPassword {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id")
   private int id;
 
-  @Column(name = "id_user")
+  @NotBlank
+  @Column(name = "user_id")
   private int userId;
 
-  @Size(min = 255, max = 255)
   @NotBlank
+  @Size(min = 255, max = 255)
+  @Column(name = "secret")
   private String secret;
 
+  @NotBlank
+  @Column(name = "valid_until")
   private LocalDateTime validUntil;
 }
