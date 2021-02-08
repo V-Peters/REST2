@@ -20,7 +20,7 @@ import springrest.entity.Role;
 import springrest.entity.User;
 import springrest.repository.RoleRepository;
 import springrest.repository.UserRepository;
-import springrest.security.jwt.JWTUtils;
+import springrest.security.jwt.JwtUtils;
 import springrest.security.services.UserDetailsImpl;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,7 +38,7 @@ public class AuthService {
   private final RoleRepository roleRepository;
   private final PasswordEncoder encoder;
   private final AuthenticationManager authenticationManager;
-  private final JWTUtils jwtUtils;
+  private final JwtUtils jwtUtils;
   private final UserService userService;
 
   @Value("${TYPE}")

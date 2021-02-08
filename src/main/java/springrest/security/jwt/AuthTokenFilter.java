@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 @RequiredArgsConstructor
 public class AuthTokenFilter extends OncePerRequestFilter {
 
-  private final JWTUtils jwtUtils;
+  private final JwtUtils jwtUtils;
   private final UserDetailsServiceImpl userDetailsService;
 
   @Value("${TYPE}")

@@ -11,8 +11,8 @@ import springrest.security.services.UserDetailsImpl;
 import java.util.Date;
 
 @Component
-public class JWTUtils {
-  private static final Logger logger = LoggerFactory.getLogger(JWTUtils.class);
+public class JwtUtils {
+  private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
   @Value("${JWT_SECRET}")
   private String jwtSecret;

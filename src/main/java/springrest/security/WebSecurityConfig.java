@@ -14,9 +14,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import springrest.security.jwt.AuthEntryPointJWT;
+import springrest.security.jwt.AuthEntryPointJwt;
 import springrest.security.jwt.AuthTokenFilter;
-import springrest.security.jwt.JWTUtils;
+import springrest.security.jwt.JwtUtils;
 import springrest.security.services.UserDetailsServiceImpl;
 
 @Configuration
@@ -27,8 +27,8 @@ import springrest.security.services.UserDetailsServiceImpl;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   private final UserDetailsServiceImpl userDetailsService;
-  private final AuthEntryPointJWT unauthorizedHandler;
-  private final JWTUtils jwtUtils;
+  private final AuthEntryPointJwt unauthorizedHandler;
+  private final JwtUtils jwtUtils;
 
   @Bean
   public AuthTokenFilter authenticationJwtTokenFilter() {
