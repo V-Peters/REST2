@@ -26,6 +26,10 @@ public class UserService {
     return userRepository.existsByEmail(email);
   }
 
+  public String findUsernameByEmail(String email) {
+    return userRepository.findByEmail(email).orElseThrow(RuntimeException::new).getUsername();
+  }
+
   public boolean checkPassword(HttpServletRequest request) {
     User user = findByUsernameFromRequest(request);
     if (user != null) {

@@ -45,7 +45,13 @@ public class AuthService {
   private String type;
 
   public ResponseEntity<LoginDTO> login(LoginRequest loginRequest) {
-    Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+    String username = "";
+    if (userService.existsByUsername(loginRequest.getUsernameOrEmail())){
+      username = loginRequest.getUsernameOrEmail();
+    } else if (userService.existsByEmail(loginRequest.getUsernameOrEmail())) {
+      username = userService.findUsernameByEmail(loginRequest.getUsernameOrEmail());
+    }
+    Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, loginRequest.getPassword()));
 
     SecurityContextHolder.getContext().setAuthentication(authentication);
     String jwt = jwtUtils.generateJwtToken(authentication);
