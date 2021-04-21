@@ -48,7 +48,9 @@ public class MeetingService {
 
   public Meeting saveMeeting(Meeting meeting) {
     meeting.setLastUpdated(LocalDateTime.now());
-    meeting.setUsers(meetingRepository.findById(meeting.getId()).get().getUsers());
+    if (meetingRepository.findById(meeting.getId()).isPresent()) {
+      meeting.setUsers(meetingRepository.findById(meeting.getId()).get().getUsers());
+    }
     return meetingRepository.save(meeting);
   }
 
