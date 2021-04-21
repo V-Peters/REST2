@@ -1,5 +1,6 @@
 package springrest.payload.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import javax.validation.constraints.Size;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class ForgotPasswordRequest {
 
   @NotBlank
