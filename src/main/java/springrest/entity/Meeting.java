@@ -38,6 +38,9 @@ public class Meeting {
   @Column(name = "display")
   private boolean display;
 
+  @Column(name = "author_id")
+  private int authorId;
+
   @JsonIgnore
   @Column(name = "last_updated")
   private LocalDateTime lastUpdated;

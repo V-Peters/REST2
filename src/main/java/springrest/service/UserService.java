@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import springrest.entity.User;
 import springrest.payload.request.EditPasswordRequest;
 import springrest.payload.request.EditUserRequest;
+import springrest.payload.response.dto.AuthorDTO;
 import springrest.repository.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
@@ -70,5 +71,10 @@ public class UserService {
       return true;
     }
     return false;
+  }
+
+  public AuthorDTO getAuthor(int id) {
+    User user = userRepository.findById(id).orElseThrow(RuntimeException::new);
+    return new AuthorDTO(user.getFirstname(), user.getLastname());
   }
 }

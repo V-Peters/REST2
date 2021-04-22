@@ -5,6 +5,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import springrest.payload.request.EditPasswordRequest;
 import springrest.payload.request.EditUserRequest;
+import springrest.payload.response.dto.AuthorDTO;
 import springrest.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,5 +45,10 @@ public class UserController {
   @DeleteMapping("/")
   public boolean deleteUser(HttpServletRequest request) {
     return userService.deleteUser(request);
+  }
+
+  @GetMapping("/author/{id}")
+  public AuthorDTO getAuthor(@PathVariable int id) {
+    return userService.getAuthor(id);
   }
 }

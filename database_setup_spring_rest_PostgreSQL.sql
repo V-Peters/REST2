@@ -16,6 +16,7 @@ CREATE TABLE "meeting_user_data"."meeting" (
   "name" character varying(100) NOT NULL UNIQUE,
   "date_time" timestamp without time zone NOT NULL,
   "display" boolean DEFAULT true,
+  "author_id" integer NOT NULL,
   "created" timestamp without time zone DEFAULT now(),
   "last_updated" timestamp without time zone DEFAULT now(),
   PRIMARY KEY (id)
@@ -90,15 +91,16 @@ CREATE TABLE "meeting_user_data"."meeting_user" (
 
 INSERT INTO "meeting_user_data"."meeting" (
   "name",
-  "date_time") 
+  "date_time",
+  "author_id") 
 VALUES
-  ('Thementag - Wie leite ich ein Thema richtig ein?', '2020-10-01 10:00:00'),
-  ('Ernährungsberatung', '2020-10-01 12:00:00'),
-  ('Workshop Datenverwaltung', '2020-10-01 14:00:00'),
-  ('Vortrag Algorithmen', '2020-10-20 10:30:00'),
-  ('Vortrag Datenstrukturen', '2020-10-20 12:30:00'),
-  ('SQL Einführung', '2020-10-06 08:30:00'),
-  ('Einführung in komplexe Systeme', '2020-10-06 15:00:00');
+  ('Thementag - Wie leite ich ein Thema richtig ein?', '2020-10-01 10:00:00', 1),
+  ('Ernährungsberatung', '2020-10-01 12:00:00', 1),
+  ('Workshop Datenverwaltung', '2020-10-01 14:00:00', 1),
+  ('Vortrag Algorithmen', '2020-10-20 10:30:00', 2),
+  ('Vortrag Datenstrukturen', '2020-10-20 12:30:00', 2),
+  ('SQL Einführung', '2020-10-06 08:30:00', 1),
+  ('Einführung in komplexe Systeme', '2020-10-06 15:00:00', 1);
 
 -----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -133,11 +135,12 @@ INSERT INTO "meeting_user_data"."user_role" (
   "role_id")
 VALUES
   (1, 1),
-  (2, 2),
+  (2, 1),
   (3, 2),
   (4, 2),
   (5, 2),
-  (6, 2);
+  (6, 2),
+  (7, 2);
     
 -----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -145,18 +148,18 @@ INSERT INTO "meeting_user_data"."meeting_user" (
   "meeting_id",
   "user_id") 
 VALUES
-  (1, 2),
-  (2, 2),
-  (3, 2),
   (1, 3),
+  (2, 3),
   (3, 3),
-  (5, 3),
-  (2, 4),
+  (1, 4),
   (3, 4),
-  (4, 4),
+  (5, 4),
+  (2, 5),
   (3, 5),
   (4, 5),
-  (6, 5),
+  (3, 6),
   (4, 6),
   (6, 6),
-  (7, 6);
+  (4, 7),
+  (6, 7),
+  (7, 7);
