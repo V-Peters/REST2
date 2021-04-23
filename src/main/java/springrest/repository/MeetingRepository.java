@@ -10,6 +10,7 @@ import java.util.List;
 @Repository
 public interface MeetingRepository extends JpaRepository<Meeting, Integer> {
 
-  List<Meeting> findByDisplayTrue();
+  boolean existsByName(String name);
 
+  List<Meeting> findByDisplayTrue();
 }

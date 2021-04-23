@@ -23,6 +23,10 @@ public class MeetingService {
   private final UserRepository userRepository;
   private final MeetingUserRepository meetingUserRepository;
 
+  public boolean checkIfNameExists(String name) {
+    return meetingRepository.existsByName(name);
+  }
+
   public List<Meeting> getMeetings(HttpServletRequest request) {
     List<Meeting> meetings;
     if (request.isUserInRole("ADMIN")) {

@@ -20,6 +20,12 @@ public class MeetingController {
 
   private final MeetingService meetingService;
 
+  @PostMapping("checkIfNameExists")
+  @PreAuthorize("hasRole('ADMIN')")
+  public boolean checkIfNameExists(@RequestBody String name) {
+    return meetingService.checkIfNameExists(name);
+  }
+
   @GetMapping()
   @PreAuthorize("hasRole('ADMIN') || hasRole('USER')")
   public List<Meeting> getMeetings(HttpServletRequest request) {
