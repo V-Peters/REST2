@@ -33,8 +33,8 @@ public class MeetingController {
 
   @PostMapping()
   @PreAuthorize("hasRole('ADMIN')")
-  public Meeting saveMeeting(@RequestBody Meeting meeting) {
-    return meetingService.saveMeeting(meeting);
+  public Meeting saveMeeting(HttpServletRequest request, @RequestBody Meeting meeting) {
+    return meetingService.saveMeeting(request, meeting);
   }
 
   @DeleteMapping("/{id}")

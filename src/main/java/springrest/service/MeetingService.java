@@ -46,7 +46,10 @@ public class MeetingService {
     return meeting;
   }
 
-  public Meeting saveMeeting(Meeting meeting) {
+  public Meeting saveMeeting(HttpServletRequest request, Meeting meeting) {
+    if (meeting.getAuthorId() == 0){
+      meeting.setAuthorId(userRepository.findByUsername(request.getRemoteUser()).orElseThrow(RuntimeException::new).getId());
+    }
     meeting.setLastUpdated(LocalDateTime.now());
     if (meetingRepository.findById(meeting.getId()).isPresent()) {
       meeting.setUsers(meetingRepository.findById(meeting.getId()).get().getUsers());
@@ -66,7 +69,7 @@ public class MeetingService {
         return false;
       }
       meeting.setDisplay(displays.get(display));
-      this.saveMeeting(meeting);
+      this.saveMeeting(null, meeting);
     }
     return true;
   }
