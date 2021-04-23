@@ -9,6 +9,7 @@ import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -28,10 +29,12 @@ public class Meeting {
   private int id;
 
   @Column(name = "name")
+  @NotNull
   @Size(max = 100)
   private String name;
 
   @Column(name = "date_time")
+  @NotNull
   @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
   private LocalDateTime datetime;
 
@@ -40,6 +43,10 @@ public class Meeting {
 
   @Column(name = "author_id")
   private int authorId;
+
+  @Column(name = "description")
+  @Size(max = 1000)
+  private String description;
 
   @JsonIgnore
   @Column(name = "last_updated")

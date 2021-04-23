@@ -8,6 +8,7 @@ import springrest.entity.User;
 import springrest.service.MeetingService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +34,8 @@ public class MeetingController {
 
   @PostMapping()
   @PreAuthorize("hasRole('ADMIN')")
-  public Meeting saveMeeting(HttpServletRequest request, @RequestBody Meeting meeting) {
+  public Meeting saveMeeting(HttpServletRequest request, @RequestBody @Valid Meeting meeting) {
+    System.out.println(meeting);
     return meetingService.saveMeeting(request, meeting);
   }
 
