@@ -33,7 +33,7 @@ public class MeetingController {
   }
 
   @GetMapping("/{id}")
-  @PreAuthorize("hasRole('ADMIN')")
+  @PreAuthorize("hasRole('ADMIN') || hasRole('USER')")
   public Meeting getMeeting(@PathVariable int id) {
     return meetingService.getMeeting(id);
   }
